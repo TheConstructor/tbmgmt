@@ -1,0 +1,24 @@
+spring:
+  main:
+    banner-mode: OFF
+
+tbmgmt:
+  files:
+    upload-temp-dir: "/tmp/tbmgmt/upload"
+    evaluation-script-storage-dir: "/tmp/tbmgmt/files"
+    experiment-file-storage-dir: "/tmp/tbmgmt/files"
+  db:
+    jdbc-url: "jdbc:postgresql://localhost:5432/tb_db"
+    user: "tbmgmt"
+    password: "S8TgInXjaj3Sw4rLHgSNbp6hFu32qVXcvKyM8n0nTw"
+    hbm2ddlAuto: "update"
+    show-sql: true
+  web:
+    ldap:
+      providerUrl: "ldap://192.168.99.100:389/"
+
+logging:
+  level:
+    root: INFO
+    de.uni_muenster.cs: DEBUG
+    org.springframework.beans.factory.wiring.BeanConfigurerSupport: DEBUG

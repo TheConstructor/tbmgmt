@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns="http://www.w3.org/1999/xhtml"
+      lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title layout:title-pattern="TBMGMT: $CONTENT_TITLE">TBMGMT: Managing Testbeds made easy</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css"
+          crossorigin="anonymous"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap', 'dist/css/bootstrap.min.css')}}"
+          th:attr="integrity=${@webJarUrlUtil.getIntegrity('bootstrap', 'dist/css/bootstrap.min.css')}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          crossorigin="anonymous"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap', 'dist/css/bootstrap-theme.min.css')}}"
+          th:attr="integrity=${@webJarUrlUtil.getIntegrity('bootstrap', 'dist/css/bootstrap-theme.min.css')}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css"
+          crossorigin="anonymous"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap-select', 'dist/css/bootstrap-select.min.css')}}"
+          th:attr="integrity=${@webJarUrlUtil.getIntegrity('bootstrap-select', 'dist/css/bootstrap-select.min.css')}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.15.35/css/bootstrap-datetimepicker.min.css"
+          crossorigin="anonymous"
+          th:href="@{${@webJarUrlUtil.getUrl('eonasdan-bootstrap-datetimepicker', 'build/css/bootstrap-datetimepicker.min.css')}}"
+          th:attr="integrity=${@webJarUrlUtil.getIntegrity('eonasdan-bootstrap-datetimepicker', 'build/css/bootstrap-datetimepicker.min.css')}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css"
+          crossorigin="anonymous"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap-tagsinput', 'dist/bootstrap-tagsinput.css')}}"
+          th:attr="integrity=${@webJarUrlUtil.getIntegrity('bootstrap-tagsinput', 'dist/bootstrap-tagsinput.css')}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput-typeahead.css"
+          crossorigin="anonymous"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap-tagsinput', 'dist/bootstrap-tagsinput-typeahead.css')}}"
+          th:attr="integrity=${@webJarUrlUtil.getIntegrity('bootstrap-tagsinput', 'dist/bootstrap-tagsinput-typeahead.css')}"/>
+
+    <link rel="stylesheet" type="text/css" href="../../../../../target/classes/static/stylesheets/main.css"
+          crossorigin="anonymous"
+          th:href="@{/stylesheets/main.css}"/>
+
+
+    <!-- The following styles and scripts are served from spring-js-resources-{ver}.jar -->
+
+    <link rel="stylesheet" type="text/css" crossorigin="anonymous"
+          href="#" th:href="@{/resources/dijit/themes/tundra/tundra.css}"/>
+
+    <script type="text/javascript" src="#" crossorigin="anonymous" th:src="@{/resources/dojo/dojo.js}"></script>
+    <script type="text/javascript" src="#" crossorigin="anonymous" th:src="@{/resources/spring/Spring.js}"></script>
+    <script type="text/javascript" src="#" crossorigin="anonymous"
+            th:src="@{/resources/spring/Spring-Dojo.js}"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script type="text/javascript" crossorigin="anonymous"
+            src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"
+            th:src="@{${@webJarUrlUtil.getUrl('html5shiv', 'html5shiv.min.js')}}"
+            th:attr="integrity=${@webJarUrlUtil.getIntegrity('html5shiv', 'html5shiv.min.js')}"></script>
+    <script type="text/javascript" crossorigin="anonymous"
+            src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"
+            th:src="@{${@webJarUrlUtil.getUrl('respond', 'dest/respond.min.js')}}"
+            th:attr="integrity=${@webJarUrlUtil.getIntegrity('respond', 'dest/respond.min.js')}"></script>
+    <![endif]-->
+    <script type="text/javascript" crossorigin="anonymous"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"
+            th:attr="integrity=${@webJarUrlUtil.getIntegrity('jquery', 'dist/jquery.min.js')}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        //<![CDATA[
+        +function () {
+            var fallbackUrl = /*[[@{${@webJarUrlUtil.getUrl('jquery', 'dist/jquery.min.js')}}]]*/'#';
+            (!!window.jQuery) || document.write('\x3Cscript type="text/javascript" src="' + fallbackUrl +
+                    '">\x3C/script>');
+        }();//]]>
+    </script>
+
+</head>
+
+
+<body class="tundra" role="document">
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">TBMGMT</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#" th:href="@{/}">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Experiment
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="../experiments.html" th:href="@{/experiments/}">Show Experiments</a></li>
+                        <li><a href="../editExperiment/edit.html" th:href="@{/editExperiment}">Create Experiment</a>
+                        </li>
+                        <!--
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                        -->
+                    </ul>
+                </li>
+                <li class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Administration
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="../admin/evaluationScripts.html" th:href="@{/admin/evaluationScripts}">EvaluationScripts</a>
+                        </li>
+                        <li><a href="../admin/editEvaluationScript/edit.html" th:href="@{/admin/editEvaluationScript}">Create
+                            EvaluationScript</a></li>
+                        <li class="divider"></li>
+                        <li><a href="../admin/nodes.html" th:href="@{/admin/nodes}">Nodes</a></li>
+                        <li><a href="../admin/editNode/edit.html" th:href="@{/admin/editNode}">Create Node</a></li>
+                        <li class="divider"></li>
+                        <li><a href="../admin/tags.html" th:href="@{/admin/tags}">Tags</a></li>
+                        <li class="divider"></li>
+                        <li><a href="../admin/testbeds.html" th:href="@{/admin/testbeds}">Testbeds</a></li>
+                        <li><a href="../admin/nodeTypes.html" th:href="@{/admin/nodeTypes}">NodeTypes</a></li>
+                        <li><a href="../admin/interfaceTypes.html" th:href="@{/admin/interfaceTypes}">InterfaceTypes</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right" method="post" action="#" th:action="@{/login}"
+                  sec:authorize="isAnonymous()">
+                <div class="form-group">
+                    <label class="sr-only navbar-text" for="headerUser">Username</label>
+                    <input type="text" class="form-control" id="headerUser" name="username"
+                           placeholder="Enter username"/>
+                </div>
+                <div class="form-group">
+                    <label class="sr-only navbar-text" for="headerPassword">Password</label>
+                    <input type="password" class="form-control" id="headerPassword" name="password"
+                           placeholder="Password"/>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" class="form-control" id="headerRememberMe" name="remember-me" value="on"
+                           title="Remember me"/>
+                    <label class="sr-only navbar-text" for="headerRememberMe">Remember me</label>
+                </div>
+                <button type="submit" class="btn btn-default" id="headerLoginSubmit">
+                    <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login
+                </button>
+            </form>
+            <form class="navbar-form navbar-right" method="post" action="#" th:action="@{/logout}"
+                  sec:authorize="isAuthenticated()">
+                <button type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout
+                </button>
+            </form>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container theme-showcase" role="main">
+    <div class="alert alert-danger alert-dismissible" role="alert" th:if="${flash_error}">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        <strong>Error:</strong>
+        <th:block th:text="${flash_error}">Better check yourself, you're not looking too
+            good.
+        </th:block>
+    </div>
+    <div class="alert alert-warning alert-dismissible" role="alert" th:if="${flash_warning}">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        <strong>Warning:</strong>
+        <th:block th:text="${flash_warning}">Better check yourself, you're not looking too
+            good.
+        </th:block>
+    </div>
+    <div class="alert alert-info alert-dismissible" role="alert" th:if="${flash_info}">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        <strong>Info:</strong>
+        <th:block th:text="${flash_info}">Better check yourself, you're not looking too
+            good.
+        </th:block>
+    </div>
+    <div class="alert alert-success alert-dismissible" role="alert" th:if="${flash_success}">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        <strong>Success:</strong>
+        <th:block th:text="${flash_success}">Better check yourself, you're not looking too
+            good.
+        </th:block>
+    </div>
+    <div id="content" layout:fragment="body">
+        Hier könnte ihre Werbung stehen.
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"
+        crossorigin="anonymous"
+        th:attr="integrity=${@webJarUrlUtil.getIntegrity('moment', 'min/moment.min.js')}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[
+    +function () {
+        var fallbackUrl = /*[[@{${@webJarUrlUtil.getUrl('moment', 'min/moment.min.js')}}]]*/'#';
+        (!!window.moment) || document.write('\x3Cscript type="text/javascript" src="' + fallbackUrl + '">\x3C/script>');
+    }();//]]>
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.0/moment-timezone-with-data.min.js"
+        crossorigin="anonymous"
+        th:attr="integrity=${@webJarUrlUtil.getIntegrity('moment-timezone', 'builds/moment-timezone-with-data.min.js')}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[
+    +function () {
+        var fallbackUrl = /*[[@{${@webJarUrlUtil.getUrl('moment-timezone', 'builds/moment-timezone-with-data.min.js')}}]]*/'#';
+        (!!window.moment.tz) || document.write('\x3Cscript type="text/javascript" src="' + fallbackUrl + '">\x3C/script>');
+    }();//]]>
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"
+        crossorigin="anonymous"
+        th:attr="integrity=${@webJarUrlUtil.getIntegrity('bootstrap', 'dist/js/bootstrap.min.js')}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[
+    +function () {
+        var fallbackUrl = /*[[@{${@webJarUrlUtil.getUrl('bootstrap', 'dist/js/bootstrap.min.js')}}]]*/'#';
+        (!!$.fn.tab) || document.write('\x3Cscript type="text/javascript" src="' + fallbackUrl + '">\x3C/script>');
+    }();//]]>
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"
+        crossorigin="anonymous"
+        th:attr="integrity=${@webJarUrlUtil.getIntegrity('bootstrap-select', 'dist/js/bootstrap-select.min.js')}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[
+    +function () {
+        var fallbackUrl = /*[[@{${@webJarUrlUtil.getUrl('bootstrap-select', 'dist/js/bootstrap-select.min.js')}}]]*/'#';
+        (!!$.fn.selectpicker) || document.write('\x3Cscript type="text/javascript" src="' + fallbackUrl + '">\x3C/script>');
+    }();//]]>
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.15.35/js/bootstrap-datetimepicker.min.js"
+        crossorigin="anonymous"
+        th:attr="integrity=${@webJarUrlUtil.getIntegrity('eonasdan-bootstrap-datetimepicker', 'build/js/bootstrap-datetimepicker.min.js')}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[
+    +function () {
+        var fallbackUrl = /*[[@{${@webJarUrlUtil.getUrl('eonasdan-bootstrap-datetimepicker', 'build/js/bootstrap-datetimepicker.min.js')}}]]*/'#';
+        (!!$.fn.datetimepicker) || document.write('\x3Cscript type="text/javascript" src="' + fallbackUrl + '">\x3C/script>');
+    }();//]]>
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"
+        crossorigin="anonymous"
+        th:attr="integrity=${@webJarUrlUtil.getIntegrity('dropzone', 'dist/min/dropzone.min.js')}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[
+    +function () {
+        var fallbackUrl = /*[[@{${@webJarUrlUtil.getUrl('dropzone', 'dist/min/dropzone.min.js')}}]]*/'#';
+        (!!window.Dropzone) || document.write('\x3Cscript type="text/javascript" src="' + fallbackUrl + '">\x3C/script>');
+    }();//]]>
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"
+        crossorigin="anonymous"
+        th:attr="integrity=${@webJarUrlUtil.getIntegrity('typeahead.js', 'dist/typeahead.bundle.min.js')}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[
+    +function () {
+        var fallbackUrl = /*[[@{${@webJarUrlUtil.getUrl('typeahead.js', 'dist/typeahead.bundle.min.js')}}]]*/'#';
+        (!!window.Bloodhound) || document.write('\x3Cscript type="text/javascript" src="' + fallbackUrl + '">\x3C/script>');
+    }();//]]>
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"
+        crossorigin="anonymous"
+        th:attr="integrity=${@webJarUrlUtil.getIntegrity('bootstrap-tagsinput', 'dist/bootstrap-tagsinput.min.js')}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[
+    +function () {
+        var fallbackUrl = /*[[@{${@webJarUrlUtil.getUrl('bootstrap-tagsinput', 'dist/bootstrap-tagsinput.min.js')}}]]*/'#';
+        (!!$.fn.tagsinput) || document.write('\x3Cscript type="text/javascript" src="' + fallbackUrl + '">\x3C/script>');
+    }();//]]>
+</script>
+<script type="text/javascript">
+    // <![CDATA[
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        $('.selectpicker').selectpicker();
+    });
+    // ]]>
+</script>
+</body>
+</html>

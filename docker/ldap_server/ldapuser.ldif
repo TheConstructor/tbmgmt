@@ -1,0 +1,7 @@
+dn: ou=students,dc=testbed,dc=home
+objectClass: organizationalUnit
+ou: students
+
+dn: ou=groups,dc=testbed,dc=home
+objectClass: organizationalUnit
+ou: groups

@@ -1,0 +1,52 @@
+//noinspection CssUnknownTarget
+@import "bourbon";
+
+html {
+  color: black;
+  @include background-image(linear-gradient(white, #cccccc));
+  background: {
+    repeat: no-repeat;
+    attachment: fixed;
+  }
+}
+
+body {
+  background: transparent;
+}
+
+div.table {
+  display: table;
+
+  div.table-row {
+    display: table-row;
+
+    div.table-cell {
+      display: table-cell;
+    }
+  }
+}
+
+#dropzone {
+  border: 2px dashed #000000;
+  border-radius: 5px;
+  min-height: 50px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: hand;
+}
+
+.collapse-glyphicon {
+  // taken from bootstrap's .glyphicon-chevron-down
+  &:before {
+    content: "\e114";
+  }
+}
+
+.collapsed {
+  .collapse-glyphicon {
+    // taken from bootstrap's .glyphicon-chevron-left
+    &:before {
+      content: "\e079";
+    }
+  }
+}

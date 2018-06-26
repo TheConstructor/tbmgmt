@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/standard">
+<head>
+    <title>Testbeds</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" th:remove="all"/>
+    <link rel="stylesheet" type="text/css" href="../../../../target/classes/static/stylesheets/main.css"
+          th:href="@{/stylesheets/main.css}" th:remove="all"/>
+</head>
+<body>
+<!--/*@thymesVar id="pagination" type="de.uni_muenster.cs.comsys.tbmgmt.web.model.Pagination<de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.node.Testbed>"*/-->
+<div id="content" layout:fragment="body">
+
+    <div class="page-header">
+        <h1>Testbeds</h1>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Testbeds</h3>
+        </div>
+        <div class="panel-body">
+            <nav th:replace="includes/pagination :: pagination(pagination=${pagination},url='/admin/testbeds')">
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="#" aria-label="Previous"
+                           th:href="@{/admin/testbeds(page=${pagination.currentPage - 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage gt 0}">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a href="#" aria-label="Next"
+                           th:href="@{/admin/testbeds(page=${pagination.currentPage + 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage + 1 lt pagination.pageCount}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Nodes</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="testbed, testbedIterStat : ${pagination.entities}">
+                        <td th:text="${testbed.id}">1</td>
+                        <td th:text="${testbed.name}">e62-1</td>
+                        <td th:text="${@testbedDao.countUsages(testbed)}">42</td>
+                        <td>
+                            <a href="editTestbed/edit.html" class="btn btn-primary"
+                               th:href="@{/admin/editTestbed(id=${testbed.id})}">Edit</a>
+                            <form action="#" method="post" th:action="@{/admin/testbeds/{id}/delete(id=${testbed.id})}"
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Do you really want to delete the testbed?');"
+                                  th:onsubmit="'return confirm(\'Do you really want to delete the testbed &quot;'+${testbed.name}+'&quot;?\');'">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="text-right">
+                <a href="editTestbed/edit.html" class="btn btn-success" th:href="@{/admin/editTestbed}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Add Testbed
+                </a>
+            </p>
+
+            <nav th:replace="includes/pagination :: pagination(pagination=${pagination},url='/admin/testbeds')">
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="#" aria-label="Previous"
+                           th:href="@{/admin/testbeds(page=${pagination.currentPage - 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage gt 0}">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a href="#" aria-label="Next"
+                           th:href="@{/admin/testbeds(page=${pagination.currentPage + 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage + 1 lt pagination.pageCount}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>

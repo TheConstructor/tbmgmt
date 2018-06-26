@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<experiment version="2" generator="TBMGMT">
+    <general>
+        <name>opnex meeting - 01</name>
+        <description></description>
+        <start_time>2009-11-06 14:54:22 +00:00</start_time>
+        <duration>0</duration>
+        <iterations>1</iterations>
+        <iteration_pause>0</iteration_pause>
+        <sample_interval>60</sample_interval>
+        <restart_nodes>false</restart_nodes>
+        <lock_testbed>false</lock_testbed>
+        <groups>
+            <group>
+                <name>All</name>
+                <role>Server</role>
+                <members>
+                    <node id="t9-150"/>
+                    <node id="t9-149"/>
+                    <node id="t9-105"/>
+                    <node id="t9-146"/>
+                    <node id="t9-154"/>
+                    <node id="t9-155"/>
+                    <node id="t9-162"/>
+                    <node id="t9-163"/>
+                    <node id="t9-158"/>
+                    <node id="t9-169"/>
+                    <node id="t9-108"/>
+                    <node id="t9-113"/>
+                    <node id="t9-117"/>
+                    <node id="t9-165"/>
+                    <node id="t9-134"/>
+                    <node id="t9-124"/>
+                    <node id="t9-136"/>
+                    <node id="t9-166"/>
+                    <node id="t9-137"/>
+                </members>
+            </group>
+            <group>
+                <name>iperf server</name>
+                <role>Server</role>
+                <members>
+                    <node id="t9-150"/>
+                </members>
+            </group>
+            <group>
+                <name>iperf-client</name>
+                <role>Client</role>
+                <members>
+                    <node id="t9-149"/>
+                </members>
+            </group>
+        </groups>
+    </general>
+    <actions>
+        <variables/>
+        <action_block id="0" execution_mode="2">
+            <action id="0">
+                <command>sudo ifup wlan0</command>
+                <group>All</group>
+                <start_time>0</start_time>
+                <duration>0</duration>
+                <evaluation_script xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+                <evaluation_parameter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            </action>
+            <action id="1">
+                <command>sudo iwconfig wlan chan 13</command>
+                <group>All</group>
+                <start_time>0</start_time>
+                <duration>0</duration>
+                <evaluation_script xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+                <evaluation_parameter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            </action>
+            <action id="2">
+                <command>sudo /etc/init.d/olsrd restart</command>
+                <group>All</group>
+                <start_time>0</start_time>
+                <duration>0</duration>
+                <evaluation_script xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+                <evaluation_parameter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            </action>
+        </action_block>
+        <action_block id="1" execution_mode="3">
+            <action id="1">
+                <command>iperf -s</command>
+                <group>iperf server</group>
+                <start_time>0</start_time>
+                <duration>120</duration>
+                <evaluation_script>global:1.file</evaluation_script>
+                <evaluation_parameter>opnex-meeting-server</evaluation_parameter>
+            </action>
+            <action id="2">
+                <command>iperf -c 192.168.18.1 -t60</command>
+                <group>iperf-client</group>
+                <start_time>5</start_time>
+                <duration>70</duration>
+                <evaluation_script>global:1.file</evaluation_script>
+                <evaluation_parameter>opnex-meeting-client</evaluation_parameter>
+            </action>
+        </action_block>
+    </actions>
+</experiment>

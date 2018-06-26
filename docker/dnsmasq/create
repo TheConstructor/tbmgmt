@@ -1,0 +1,7 @@
+#sudo -s
+#wget https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework
+sudo docker build -t pxe .
+sudo docker run --privileged --volumes-from rootfs --net=host --name dnsmasq -d pxe
+#PXECID=$(docker run --privileged --name dnsmasq -d pxe)
+#./pipework br0 $PXECID 10.0.0.1/8
+

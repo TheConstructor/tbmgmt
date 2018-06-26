@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" version="2.0">
+
+    <jaxb:globalBindings enableJavaNamingConventions="true" underscoreBinding="asCharInWord"/>
+
+</jaxb:bindings>

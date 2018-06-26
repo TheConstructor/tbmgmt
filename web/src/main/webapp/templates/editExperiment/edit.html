@@ -1,0 +1,910 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/standard">
+<!--@thymesVar id="experiment" type="de.uni_muenster.cs.comsys.tbmgmt.web.model.experiment.FilteredExperiment"-->
+<!--@thymesVar id="flowExecutionUrl" type="String"-->
+<head>
+    <title th:text="${experiment.id != null ? 'Edit Experiment ' + experiment.id : 'Create Experiment'}">Edit
+        Experiment</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" th:remove="all"/>
+    <link rel="stylesheet" type="text/css" href="../../../../target/classes/static/stylesheets/main.css"
+          th:href="@{/stylesheets/main.css}" th:remove="all"/>
+</head>
+<body>
+
+<div id="content" layout:fragment="body">
+
+    <div class="page-header">
+        <h1 th:text="${experiment.id != null ? 'Edit Experiment ' + experiment.id : 'Create Experiment'}">Edit
+            Experiment</h1>
+    </div>
+
+    <form id="experiment_form" action="#" th:object="${experiment}" th:action="${flowExecutionUrl}" method="post"
+          accept-charset="UTF-8">
+
+        <div class="panel panel-danger" th:if="${#fields.hasAnyErrors()}">
+            <div class="panel-heading">
+                <h1 class="panel-title">There were errors in the input</h1>
+            </div>
+            <div class="panel-body">
+                <th:block th:if="${#fields.hasGlobalErrors()}" th:each="err : ${#fields.globalErrors()}">
+                    <p th:text="${err}">Your input had errors</p>
+                </th:block>
+                <th:block th:each="err : ${#fields.detailedErrors()}">
+                    <p th:if="${!err.global}">
+                        <strong th:text="${err.getFieldName()}">Name</strong>: <span th:text="${err.getMessage()}">is wrong</span>
+                    </p>
+                </th:block>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="panel-title">Experiment</h1>
+            </div>
+            <div class="panel-body">
+                <div role="tabpanel" id="exp_tabs">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#general" aria-controls="general" role="tab"
+                               data-toggle="tab"
+                               th:classappend="${@tbmgmtWebUtils.containsFieldNotPrefixed(#fields.detailedErrors(),'nodeGroups','actionBlocks','variables','files')}?'bg-danger'">
+                                General Properties
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#nodeGroups" aria-controls="nodeGroups" role="tab"
+                               data-toggle="tab"
+                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.detailedErrors(),'nodeGroups')}?'bg-danger'">
+                                Node Groups
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#actions" aria-controls="actions" role="tab"
+                               data-toggle="tab"
+                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.detailedErrors(),'actionBlocks')}?'bg-danger'">
+                                Actions
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#variables" aria-controls="variables" role="tab"
+                               data-toggle="tab"
+                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.detailedErrors(),'variables')}?'bg-danger'">
+                                Variables
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#files" aria-controls="files" role="tab"
+                               data-toggle="tab"
+                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.detailedErrors(),'files')}?'bg-danger'">
+                                Files
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="general">
+                            <div id="generalLoading" class="hidden">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refreshing Tab
+                            </div>
+                            <div id="generalContent" th:object="${experiment}">
+
+                                <fieldset class="container-fluid">
+                                    <legend class="col-xs-12">General Properties</legend>
+
+                                    <p th:replace="includes/formControls :: textInput(name='name',id='exp_name',label='Name')">
+                                        <input type="text" th:field="*{name}"/>
+                                    </p>
+
+                                    <p layout:replace="includes/formControls :: tagInput(name='tags',id='exp_tags',label='Tags')">
+                                        <select th:field="*{tags}" layout:fragment="options" th:remove="tag">
+                                            <option value="tag1"
+                                                    th:each="tag : ${experiment.tags}"
+                                                    th:value="${tag}"
+                                                    th:text="${tag}">tag1
+                                            </option>
+                                            <option value="tag2" th:remove="all">tag2</option>
+                                            <option value="tag3" th:remove="all">tag3</option>
+                                        </select>
+                                    </p>
+
+                                    <p th:replace="includes/formControls :: textarea(name='description',id='exp_description',label='Description')">
+                                        <textarea th:field="*{description}"></textarea>
+                                    </p>
+
+                                    <p th:replace="includes/formControls :: datetimeInput(name='startTime',id='exp_startTime',label='Start time')">
+                                        <input type="datetime-local" th:field="*{startTime}"/>
+                                    </p>
+
+                                    <p th:replace="includes/formControls :: textInput(name='duration',id='exp_duration',label='Duration',title='Maximum execution time of experiment. Use d/h/m/s postfixes as units; default unit is seconds')">
+                                        <input type="text" th:field="*{duration}"/>
+                                    </p>
+
+                                    <p class="row" th:unless="${experiment.possiblyConflictingExperiments.empty}">
+                                    <div class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                                        The current schedule conflicts with:
+                                        <ul>
+                                            <li
+                                                    th:each="conflictingExperiment : ${experiment.possiblyConflictingExperiments}"
+                                                    th:text="${conflictingExperiment}">another experiment
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    </p>
+
+                                    <p th:replace="includes/formControls :: textInput(name='sampleInterval',id='exp_sampleInterval',label='Sample interval',title='Time between network-scans. Use d/h/m/s postfixes as units; default unit is seconds')">
+                                        <input type="text" th:field="*{sampleInterval}"/>
+                                    </p>
+
+                                    <p th:replace="includes/formControls :: checkboxInput(name='lockTestbed',id='exp_lockTestbed',label='Lock Testbed')">
+                                        <input type="checkbox" th:field="*{lockTestbed}"/>
+                                    </p>
+
+                                    <p th:replace="includes/formControls :: checkboxInput(name='restartNodes',id='exp_restartNodes',label='Restart Nodes')">
+                                        <input type="checkbox" th:field="*{restartNodes}"/>
+                                    </p>
+
+                                    <p th:replace="includes/formControls :: checkboxInput(name='interactive',id='exp_interactive',label='Interactive')">
+                                        <input type="checkbox" th:field="*{interactive}"/>
+                                    </p>
+
+                                    <p th:replace="includes/formControls :: textInput(name='replications',id='exp_replications',label='Replications')">
+                                        <input type="text" th:field="*{replications}"/>
+                                    </p>
+
+                                    <p th:replace="includes/formControls :: textInput(name='pauseBetweenReplications',id='exp_pauseBetweenReplications',label='Pause between replications')">
+                                        <input type="text" th:field="*{replications}"/>
+                                    </p>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="nodeGroups">
+                            <div id="nodeGroupsLoading" class="hidden">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refreshing Tab
+                            </div>
+                            <div id="nodeGroupsContent" th:object="${experiment}">
+
+                                <th:block th:each="nodeGroup, ng : *{nodeGroups}">
+                                    <fieldset class="container-fluid"
+                                              th:object="${experiment.nodeGroups[__${ng.index}__]}">
+                                        <legend class="col-xs-12" th:text="|Node Group ${ng.count}|">Node Group 1
+                                        </legend>
+
+                                        <p th:replace="includes/formControls :: textInput(name='name',id=${#ids.seq('exp_nodeGroup_name')},label='Name')">
+                                            <input type="text" th:field="*{name}"/>
+                                        </p>
+
+                                        <p layout:replace="includes/formControls :: singleSelect(name='role',id=${#ids.seq('exp_nodeGroup_role')},label='Role')">
+                                            <select th:field="*{role}" layout:fragment="options" th:remove="tag">
+                                                <option value="SERVER">Server</option>
+                                                <option value="SERVANT">Servant</option>
+                                                <option value="CLIENT">Client</option>
+                                            </select>
+                                        </p>
+
+                                        <p layout:replace="includes/formControls :: multiSelect(name='nodes',id=${#ids.seq('exp_nodeGroup_nodes')},label='Nodes',title='Select the nodes in this group')">
+                                            <select th:field="*{nodes}" layout:fragment="options" th:remove="tag">
+                                                <option value="node1"
+                                                        th:each="node : ${@nodeDao.getAllActiveNodesOrderedByName()}"
+                                                        th:value="${node.name}"
+                                                        th:text="${node.name}"
+                                                        th:attr="data-subtext=${node.additionalInfo}">node1
+                                                </option>
+                                                <option value="node2" th:remove="all">node2</option>
+                                                <option value="node3" th:remove="all">node3</option>
+                                            </select>
+                                        </p>
+
+                                        <p class="row" th:if="!*{inUse}">
+                                            <span class="col-xs-12"
+                                                  style="align-content: flex-end; text-align: right;">
+                                                <button type="submit" name="_eventId_adjust" class="btn btn-danger"
+                                                        value="delNG-0" th:value="|delNG-${ng.index}|">
+                                                    <span class="glyphicon glyphicon-remove"
+                                                          aria-hidden="true"></span>
+                                                    Delete Node Group
+                                                </button>
+                                            </span>
+                                        </p>
+                                    </fieldset>
+                                </th:block>
+                            </div>
+
+                            <fieldset style="align-content: flex-end; text-align: right;">
+                                <button type="submit" name="_eventId_adjust" class="btn btn-success"
+                                        value="addNG" id="addNodeGroupButton">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    Add Node Group
+                                </button>
+                            </fieldset>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="actions">
+                            <div id="actionsLoading" class="hidden">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refreshing Tab
+                            </div>
+                            <div id="actionsContent" th:object="${experiment}">
+
+                                <th:block th:each="actionBlock, ab : *{actionBlocks}">
+                                    <fieldset class="container-fluid"
+                                              th:object="${experiment.actionBlocks[__${ab.index}__]}">
+                                        <legend class="col-xs-12" th:text="|Action Block ${ab.count}|">Action Block 1
+                                        </legend>
+
+                                        <p layout:replace="includes/formControls :: singleSelect(name='executionMode',
+                                            id=${#ids.seq('exp_actionBlock_executionMode')},
+                                            label='Execution Mode')">
+                                            <select th:field="*{executionMode}" layout:fragment="options"
+                                                    th:remove="tag">
+                                                <option value="PARALLEL"
+                                                        data-subtext="Parallel action execution: the executor immediately moves on to the next command and executes it on all nodes.">
+                                                    Parallel
+                                                </option>
+                                                <option value="SERIAL"
+                                                        data-subtext="Serial action execution: the executor waits for all nodes to complete the command and then executes the next command.">
+                                                    Serial
+                                                </option>
+                                                <option value="TIMED"
+                                                        data-subtext="Time based action execution: the executor starts and stops each command according to it's timing">
+                                                    Timed
+                                                </option>
+                                                <option value="SERVER"
+                                                        data-subtext="Server execution mode: actions run as long as the whole experiment.">
+                                                    Server
+                                                </option>
+                                            </select>
+                                        </p>
+
+                                        <th:block th:each="action, a : *{actions}">
+                                            <fieldset class="container-fluid"
+                                                      th:object="${experiment.actionBlocks[__${ab.index}__].actions[__${a.index}__]}">
+                                                <legend class="col-xs-12" th:text="|Action ${a.count}|">Action 1
+                                                </legend>
+
+                                                <p layout:replace="includes/formControls :: singleSelect(
+                                                name='targetedNodeGroup',
+                                                id=${#ids.seq('exp_actionBlock_action_targetedNodeGroup')},
+                                                label='Targeted Node Group')">
+                                                    <select th:field="*{targetedNodeGroup}" layout:fragment="options"
+                                                            th:remove="tag">
+                                                        <option value="0"
+                                                                th:each="nodeGroup, ng: ${experiment.nodeGroups}"
+                                                                th:value="${ng.index}"
+                                                                th:text="${nodeGroup.name}">nodeGroup1
+                                                        </option>
+                                                        <option value="1" th:remove="all">nodeGroup2</option>
+                                                        <option value="2" th:remove="all">nodeGroup3</option>
+                                                    </select>
+                                                </p>
+
+                                                <p th:replace="includes/formControls :: textInput(name='command',
+                                                id=${#ids.seq('exp_actionBlock_action_command')},
+                                                label='Command')">
+                                                    <input type="text" th:field="*{command}"/>
+                                                </p>
+
+                                                <p class="row" th:if="${action.commandPreview != null}">
+                                                    <div class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                                                        After variable-interpolation this could become
+                                                        <code th:text="${action.commandPreview}">rm -rf /</code>
+                                                    </div>
+                                                </p>
+
+                                                <p th:replace="includes/formControls :: textInput(name='startOffset',
+                                                id=${#ids.seq('exp_actionBlock_action_startOffset')},
+                                                label='Start Offset*',
+                                                title='Time since beginning of experiment. Use d/h/m/s postfixes as units; default unit is seconds')">
+                                                    <input type="text" th:field="*{startOffset}"/>
+                                                </p>
+
+                                                <p th:replace="includes/formControls :: textInput(name='duration',
+                                                id=${#ids.seq('exp_actionBlock_action_duration')},
+                                                label='Duration',
+                                                title='Time after the command will be killed; 0=don\'t kill. Use d/h/m/s postfixes as units; default unit is seconds')">
+                                                    <input type="text" th:field="*{duration}"/>
+                                                </p>
+
+                                                <p layout:replace="includes/formControls :: singleSelect(
+                                                name='evaluationScript',
+                                                id=${#ids.seq('exp_actionBlock_action_evaluationScript')},
+                                                label='Evaluation Script')">
+                                                    <select th:field="*{evaluationScript}" layout:fragment="options"
+                                                            th:remove="tag">
+                                                        <option value="0"
+                                                                th:each="script, si: *{evaluationScripts}"
+                                                                th:value="${script.key}"
+                                                                th:text="${script.value.name}"
+                                                                th:attr="data-subtext=${script.value.description}">
+                                                            nodeGroup1
+                                                        </option>
+                                                        <option value="1" th:remove="all">nodeGroup2</option>
+                                                        <option value="2" th:remove="all">nodeGroup3</option>
+                                                    </select>
+                                                </p>
+
+                                                <div class="form-group" th:if="*{evaluationScriptId}">
+                                                    <p class="row">
+                                                <span class="col-xs-12 col-md-4 col-lg-3">
+                                                    <label class="control-label"
+                                                           for="exp_actionBlock_action_evaluationScript_download"
+                                                           th:for="${#ids.seq('exp_actionBlock_action_evaluationScript_download')}">Download</label>
+                                                </span>
+                                                <span class="col-xs-12 col-md-8 col-lg-9"
+                                                      id="exp_actionBlock_action_evaluationScript_download"
+                                                      th:id="${#ids.prev('exp_actionBlock_action_evaluationScript_download')}">
+                                                    <a href="#"
+                                                       th:href="@{/experiments/evaluationScript/{id}(id=*{evaluationScriptId})}">
+                                                        Download
+                                                        <th:block th:text="*{evaluationScript}">File</th:block>
+                                                    </a>
+                                                </span>
+                                                    </p>
+                                                </div>
+
+                                                <p th:replace="includes/formControls :: textInput(name='evaluationParameter',
+                                                id=${#ids.seq('exp_actionBlock_action_evaluationParameter')},
+                                                label='Evaluation Parameter')">
+                                                    <input type="text" th:field="*{evaluationParameter}"/>
+                                                </p>
+
+                                                <p class="row" th:if="${action.evaluationParameterPreview != null}">
+                                                    <div class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                                                        After variable-interpolation this could become
+                                                        <code th:text="${action.evaluationParameterPreview}">rm -rf
+                                                            /</code>
+                                                    </div>
+                                                </p>
+
+                                                <p class="row">
+                                                    <span class="col-xs-12"
+                                                          style="align-content: flex-end; text-align: right;">
+                                                        <button type="submit" name="_eventId_adjust"
+                                                                class="btn btn-danger"
+                                                                value="delA-0-0"
+                                                                th:value="|delA-${ab.index}-${a.index}|">
+                                                            <span class="glyphicon glyphicon-remove"
+                                                                  aria-hidden="true"></span>
+                                                            Delete Action
+                                                        </button>
+                                                    </span>
+                                                </p>
+                                            </fieldset>
+                                        </th:block>
+
+                                        <p class="row">
+                                                <span class="col-xs-12"
+                                                      style="align-content: flex-end; text-align: right;">
+                                                    <button type="submit" name="_eventId_adjust" class="btn btn-success"
+                                                            value="addA-0" th:value="|addA-${ab.index}|">
+                                                        <span class="glyphicon glyphicon-plus"
+                                                              aria-hidden="true"></span>
+                                                        Add Action
+                                                    </button>
+
+                                                    <button type="submit" name="_eventId_adjust" class="btn btn-danger"
+                                                            value="delAB-0" th:value="|delAB-${ab.index}|">
+                                                        <span class="glyphicon glyphicon-remove"
+                                                              aria-hidden="true"></span>
+                                                        Delete Action Block
+                                                    </button>
+                                                </span>
+                                        </p>
+                                    </fieldset>
+                                </th:block>
+                            </div>
+
+                            <fieldset style="align-content: flex-end; text-align: right;">
+                                <button type="submit" name="_eventId_adjust" class="btn btn-success"
+                                        value="addAB" id="addActionBlockButton">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    Add Action Block
+                                </button>
+                            </fieldset>
+                            <div class="panel-footer">
+                                <p>
+                                    Command- and Evaluation Parameter-fields support variable interpolation. The basic
+                                    syntax is <code>{variableName}</code> and will be replaced by the value of the
+                                    variable at that time.
+                                </p>
+                                <p>
+                                    To access IPv4-, IPv6- or MAC-addresses of a Node Group you can use this syntax:
+                                    <code>{nodeGroup[.[interfaceName|*interfaceType][.(ipv4|ipv6|mac)]]}</code> e.g.
+                                    <code>{nodeGroup}</code> which will give the IPv4-addresses of all interfaces not
+                                    marked as controlledOverThisConnection, <code>{nodeGroup..mac}</code> gives their
+                                    respective MAC-addresses and <code>{nodeGroup.*wireless}</code> gives the
+                                    IPv4-addresses of all wireless-interfaces.
+                                </p>
+                                <p>
+                                    In Evaluation Parameter-fields <code>{returnCode}</code> will be interpolated by
+                                    the return-code of the command or <code>null</code> if unknown.
+                                </p>
+                                <p>
+                                    <strong>Note:</strong> there currently is no way to access multiple addresses of
+                                    the same interface (in groups with more than one interface). Using more than one
+                                    address-interpolation will cause the cartesian-product to be interpolated.
+                                </p>
+                                <p>
+                                    <strong>Note:</strong> Address-interpolation causes all variants to be executed
+                                    immediately after each other while for each regular variable value the whole
+                                    experiment will be iterated.
+                                </p>
+                                <p>
+                                    <strong>Note:</strong> In Evaluation Parameter-field you can only use the exact same
+                                    address-interpolations you used in the corresponding Command-field.
+                                </p>
+                                <p>
+                                    <strong>Note:</strong> To access files in you action prepend <code>../</code> to
+                                    the file-name
+                                </p>
+                                <p>
+                                    <strong>Note:</strong> Server-Mode action-blocks will only start execution once
+                                    the first other action-block finished. This is to allow initialization. Run
+                                    e.g. <code>true</code> in it's own action-block, if you don't need initialization.
+                                </p>
+                            </div>
+                            <div class="panel-footer">* = only applies to execution mode "timed"</div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="variables">
+                            <div id="variablesLoading" class="hidden">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refreshing Tab
+                            </div>
+                            <div id="variablesContent" th:object="${experiment}">
+
+                                <th:block th:each="variable, v : *{variables}">
+                                    <fieldset class="container-fluid"
+                                              th:object="${experiment.variables[__${v.index}__]}">
+                                        <legend class="col-xs-12" th:text="|Variable ${v.count}|">Variable 1
+                                        </legend>
+
+                                        <p th:replace="includes/formControls :: textInput(name='name',
+                                                id=${#ids.seq('exp_variable_name')},
+                                                label='Name')">
+                                            <input type="text" th:field="*{name}"/>
+                                        </p>
+
+                                        <p layout:replace="includes/formControls :: singleSelect(name='type',
+                                            id=${#ids.seq('exp_variable_type')},
+                                            label='Type')">
+                                            <select th:field="*{type}" layout:fragment="options"
+                                                    th:remove="tag">
+                                                <option value="SET"
+                                                        data-subtext="The variable takes each of the given values in turn.">
+                                                    Set
+                                                </option>
+                                                <option value="INTEGER"
+                                                        data-subtext="The variable will take each value of an integer range.">
+                                                    Integer
+                                                </option>
+                                                <option value="DOUBLE"
+                                                        data-subtext="The variable will take each value of a decimal range.">
+                                                    Double
+                                                </option>
+                                            </select>
+                                        </p>
+
+                                        <p th:replace="includes/formControls :: textInput(name='rangeStart',
+                                                id=${#ids.seq('exp_variable_rangeStart')},
+                                                label='Start of Range*')">
+                                            <input type="text" th:field="*{rangeStart}"/>
+                                        </p>
+
+                                        <p th:replace="includes/formControls :: textInput(name='rangeEnd',
+                                                id=${#ids.seq('exp_variable_rangeEnd')},
+                                                label='End of Range*')">
+                                            <input type="text" th:field="*{rangeEnd}"/>
+                                        </p>
+
+                                        <p th:replace="includes/formControls :: textInput(name='stepping',
+                                                id=${#ids.seq('exp_variable_stepping')},
+                                                label='Stepping*')">
+                                            <input type="text" th:field="*{stepping}"/>
+                                        </p>
+
+                                        <th:block th:each="value, vv : *{values}">
+                                            <fieldset class="container-fluid"
+                                                      th:object="${experiment.variables[__${v.index}__].values[__${vv.index}__]}">
+                                                <legend class="col-xs-12" th:text="|Value ${vv.count}|">Value 1
+                                                </legend>
+
+                                                <p th:replace="includes/formControls :: textInput(name='value',
+                                                id=${#ids.seq('exp_variable_value_value')},
+                                                label='Value+')">
+                                                    <input type="text" th:field="*{value}"/>
+                                                </p>
+
+                                                <p class="row">
+                                                    <span class="col-xs-12"
+                                                          style="align-content: flex-end; text-align: right;">
+                                                        <button type="submit" name="_eventId_adjust"
+                                                                class="btn btn-danger"
+                                                                value="delVV-0-0"
+                                                                th:value="|delVV-${v.index}-${vv.index}|">
+                                                            <span class="glyphicon glyphicon-remove"
+                                                                  aria-hidden="true"></span>
+                                                            Delete Value
+                                                        </button>
+                                                    </span>
+                                                </p>
+                                            </fieldset>
+                                        </th:block>
+
+                                        <p class="row">
+                                                <span class="col-xs-12"
+                                                      style="align-content: flex-end; text-align: right;">
+                                                    <button type="submit" name="_eventId_adjust" class="btn btn-success"
+                                                            value="addVV-0" th:value="|addVV-${v.index}|">
+                                                        <span class="glyphicon glyphicon-plus"
+                                                              aria-hidden="true"></span>
+                                                        Add Value
+                                                    </button>
+
+                                                    <button type="submit" name="_eventId_adjust" class="btn btn-danger"
+                                                            value="delV-0" th:value="|delV-${v.index}|">
+                                                        <span class="glyphicon glyphicon-remove"
+                                                              aria-hidden="true"></span>
+                                                        Delete Variable
+                                                    </button>
+                                                </span>
+                                        </p>
+                                    </fieldset>
+                                </th:block>
+                            </div>
+
+                            <fieldset style="align-content: flex-end; text-align: right;">
+                                <button type="submit" name="_eventId_adjust" class="btn btn-success"
+                                        value="addV" id="addVariableButton">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    Add Variable
+                                </button>
+                            </fieldset>
+                            <div class="panel-footer">* = only applies to non-set-type variables</div>
+                            <div class="panel-footer">+ = only applies to set-type variables</div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="files">
+                            <div id="filesLoading" class="hidden">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refreshing Tab
+                            </div>
+                            <div id="filesContent" th:object="${experiment}">
+                                <th:block th:each="file, i : *{files}">
+                                    <fieldset class="container-fluid"
+                                              th:object="${experiment.files[__${i.index}__]}">
+                                        <legend class="col-xs-12">File</legend>
+
+                                        <p th:replace="includes/formControls :: textInput(name='fileName',
+                                                id=${#ids.seq('exp_file_name')},
+                                                label='Name')">
+                                            <input type="text" th:field="*{fileName}"/>
+                                        </p>
+
+                                        <p th:replace="includes/formControls :: textInput(name='description',
+                                                id=${#ids.seq('exp_file_description')},
+                                                label='Description')">
+                                            <textarea th:field="*{description}"></textarea>
+                                        </p>
+
+                                        <p th:replace="includes/formControls :: checkboxInput(name='eval',
+                                                id=${#ids.seq('exp_file_eval')},
+                                                label='Eval')">
+                                            <input type="checkbox" th:field="*{eval}"/>
+                                        </p>
+
+                                        <div class="form-group" th:if="*{id}">
+                                            <p class="row">
+                                                <span class="col-xs-12 col-md-4 col-lg-3">
+                                                    <label class="control-label" for="exp_file_download"
+                                                           th:for="${#ids.seq('exp_file_download')}">Download</label>
+                                                </span>
+                                                <span class="col-xs-12 col-md-8 col-lg-9"
+                                                      id="exp_file_download"
+                                                      th:id="${#ids.prev('exp_file_download')}">
+                                                    <a href="#"
+                                                       th:href="@{/experiments/{id}/file/{fileId}(id=${experiment.id},fileId=*{id})}">
+                                                        Download
+                                                        <th:block th:text="*{fileName}">File</th:block>
+                                                    </a>
+                                                </span>
+                                            </p>
+                                        </div>
+
+                                        <p class="row">
+                                            <span class="col-xs-12"
+                                                  style="align-content: flex-end; text-align: right;">
+                                                <button type="submit" name="_eventId_adjust" class="btn btn-danger"
+                                                        value="delF-0" th:value="|delF-${i.index}|"
+                                                        onclick="return confirm('Do you really want to delete the file? This is immediately effective and is not undone by cancel!');"
+                                                        th:onclick="'return confirm(\'Do you really want to cancel the experiment &quot;'+${file.fileName}+'&quot;? This is immediately effective and is not undone by cancel!\');'">
+                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                    Delete File
+                                                </button>
+                                            </span>
+                                        </p>
+                                    </fieldset>
+                                </th:block>
+                            </div>
+                            <div id="dropzone">
+                                <span class="dz-message">Drop files here or click here to upload files</span>
+                            </div>
+                            <!-- this fragment is heavily inspired by http://www.dropzonejs.com/bootstrap.html -->
+                            <!-- The global file processing state -->
+                            <span class="fileupload-process">
+                              <div id="total-progress" class="progress progress-striped active" role="progressbar"
+                                   aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                  <div class="progress-bar progress-bar-success" style="width:0%;"
+                                       data-dz-uploadprogress="data-dz-uploadprogress"></div>
+                              </div>
+                            </span>
+                            <div class="table table-striped files" id="dropzonePreviews">
+
+                                <div class="table-row template file-row">
+                                    <div class="table-cell">
+                                        <p class="name" data-dz-name="data-dz-name"></p>
+                                        <strong class="error text-danger"
+                                                data-dz-errormessage="data-dz-errormessage"></strong>
+                                    </div>
+                                    <div class="table-cell">
+                                        <p class="size" data-dz-size="data-dz-size"></p>
+                                        <div class="progress progress-striped active" role="progressbar"
+                                             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                            <div class="progress-bar progress-bar-success" style="width:0%;"
+                                                 data-dz-uploadprogress="data-dz-uploadprogress"></div>
+                                        </div>
+                                    </div>
+                                    <div class="table-cell">
+                                        <button data-dz-remove="data-dz-remove" class="btn btn-danger cancel">
+                                            <i class="glyphicon glyphicon-ban-circle"></i>
+                                            <span>Cancel</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="panel-footer">To access files in you action prepend <code>../</code> to
+                                the file-name
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <fieldset class="container-fluid">
+                    <p class="row">
+                            <span class="col-xs-12 col-md-3">
+                                <button type="submit" id="exp_store" name="_eventId_store" class="btn btn-primary"
+                                        style="width: 100%;">
+                                    Store
+                                </button>
+                            </span>
+                            <span class="col-xs-12 col-md-3">
+                                <button type="submit" id="exp_apply" name="_eventId_apply" class="btn btn-info"
+                                        style="width: 100%;">
+                                    Apply current changes
+                                </button>
+                            </span>
+                            <span class="col-xs-12 col-md-3">
+                                <button type="submit" id="exp_discard" name="_eventId_discard" class="btn btn-warning"
+                                        style="width: 100%;">
+                                    Discard current changes
+                                </button>
+                            </span>
+                            <span class="col-xs-12 col-md-3">
+                                <button type="submit" id="exp_cancel" name="_eventId_cancel" class="btn btn-danger"
+                                        style="width: 100%;">
+                                    Cancel
+                                </button>
+                            </span>
+                    </p>
+                    <p class="row">
+                            <span class="col-xs-12 col-md-12">
+                                <button type="submit" id="exp_export" name="_eventId_export" class="btn btn-primary">
+                                    Export
+                                </button>
+                            </span>
+                    </p>
+                </fieldset>
+            </div>
+        </div>
+
+        <input type="hidden" id="exp_activeTab" value="general" th:field="*{activeTab}"/>
+        <script type="text/javascript" th:inline="javascript">
+            // <![CDATA[
+            $(function () {
+                var initiallyActiveTab = /*[[*{activeTab}]]*/ 'general';
+                var matchingTab = $("#exp_tabs").find(".nav-tabs a").filter(function (i, elem) {
+                    return $(elem).attr("href") === "#" + initiallyActiveTab;
+                });
+                if (matchingTab.length <= 0) {
+                    matchingTab = matchingTab.end();
+                }
+                matchingTab.eq(0).tab('show');
+
+                $("#exp_tabs").find("a[data-toggle='tab']").on("shown.bs.tab", function (e) {
+                    var targetId = $(e.target).attr("href");
+                    var targetContentId = targetId + 'Content';
+                    var targetLoadingId = targetId + 'Loading';
+
+                    $("#exp_activeTab").val(targetId.substr(1));
+
+                    $(targetContentId).addClass('hidden');
+                    $(targetLoadingId).removeClass('hidden');
+
+                    Spring.remoting.submitForm($(e.target).attr("id"), 'experiment_form', {
+                        _eventId: 'apply',
+                        fragments: '//' + targetContentId + ',//' + targetLoadingId
+                    });
+                });
+
+                var rigButton = function (id, tabId) {
+                    $(id).click(function (event) {
+                        event.preventDefault();
+
+                        var targetId = tabId;
+                        if (typeof tabId != "string") {
+                            targetId = '#' + $("#exp_activeTab").val();
+                        }
+                        var targetContentId = targetId + 'Content';
+                        var targetLoadingId = targetId + 'Loading';
+
+                        $(targetContentId).addClass('hidden');
+                        $(targetLoadingId).removeClass('hidden');
+
+                        var params = {
+                            fragments: '//' + targetContentId + ',//' + targetLoadingId
+                        };
+                        params[$(event.delegateTarget).attr('name')] = $(event.delegateTarget).val();
+                        Spring.remoting.submitForm(null, 'experiment_form', params);
+                    });
+                };
+                rigButton("#addNodeGroupButton", '#nodeGroups');
+                rigButton("#addActionBlockButton", '#actions');
+                rigButton("#addVariableButton", '#variables');
+                // store and cancel usually end the flow - no need to AJAX them
+                rigButton("#exp_apply");
+                rigButton("#exp_discard");
+
+                var dropzoneForm = $("form#dropzoneForm");
+                var existingFallback = Dropzone.prototype.getExistingFallback;
+                Dropzone.prototype.getExistingFallback = function () {
+                    var fallback = $('#' + this.element.id + 'Form').find(".fallback");
+                    if (fallback.length > 0) {
+                        return fallback.get(0);
+                    }
+                    return existingFallback.apply(this);
+                };
+                var dropzoneParams = {
+                    ajaxSource: "dropzone",
+                    fragments: '//#filesContent,//#filesLoading'
+                };
+                var fields = dropzoneForm.serializeArray();
+                $.each(fields, function (index, field) {
+                    dropzoneParams[field.name] = field.value;
+                });
+
+                var dropzonePreviewTemplate = $("#dropzonePreviews").find(".template");
+                dropzonePreviewTemplate.removeClass("template");
+                var dropzonePreviewTemplateHtml = dropzonePreviewTemplate.html();
+                dropzonePreviewTemplate.detach();
+
+                var myDropzone = new Dropzone("div#dropzone", {
+                    url: dropzoneForm.attr("action"),
+                    method: dropzoneForm.attr("method"),
+                    parallelUploads: 1,
+                    uploadMultiple: false,
+                    addRemoveLinks: true,
+                    clickable: true,
+                    createImageThumbnails: false,
+                    previewsContainer: "#dropzonePreviews",
+                    previewTemplate: dropzonePreviewTemplateHtml,
+                    params: dropzoneParams,
+                    paramName: dropzoneForm.find("input[type='file']").attr("name"),
+                    headers: {
+                        Accept: "text/html;type=ajax"
+                    },
+                    success: function (file, responseText, e) {
+                        Spring.remoting.handleResponse(responseText, {
+                            xhr: file.xhr,
+                            args: {
+                                modal: false,
+                                content: {
+                                    // here should be the exeact params - only used in redirect with same url
+                                }
+                            }
+                        });
+                        var redirectURL = file.xhr.getResponseHeader('Spring-Redirect-URL');
+                        if (dojo.isString(redirectURL) && redirectURL.length > 0) {
+                            if (redirectURL.indexOf("/") >= 0) {
+                                window.location = window.location.protocol + "//" + window.location.host + redirectURL;
+                            } else {
+                                var location = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                                var appendIndex = location.lastIndexOf("/");
+                                location = location.substr(0, appendIndex + 1) + redirectURL;
+                                window.location = location;
+                            }
+                        }
+                        if (file.previewElement) {
+                            return file.previewElement.classList.add("dz-success");
+                        }
+                    }
+                });
+
+                // Update the total progress bar
+                myDropzone.on("totaluploadprogress", function (progress) {
+                    document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+                });
+
+                myDropzone.on("sending", function (file) {
+                    // Show the total progress bar when upload starts
+                    document.querySelector("#total-progress").style.opacity = "1";
+                });
+
+                // Hide the total progress bar when nothing's uploading anymore
+                myDropzone.on("queuecomplete", function (progress) {
+                    document.querySelector("#total-progress").style.opacity = "0";
+                });
+
+                myDropzone.on("success", function (file) {
+                    myDropzone.removeFile(file);
+                });
+            });
+            // ]]>
+        </script>
+    </form>
+
+    <form id="dropzoneForm" action="#" th:action="${flowExecutionUrl}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_eventId" value="uploadFile"/>
+        <div class="panel panel-default fallback">
+            <div class="panel-heading">
+                <h1 class="panel-title">Experiment File Upload</h1>
+            </div>
+            <div class="panel-body">
+                <fieldset>
+                    <legend>Upload a file to be used in the experiment</legend>
+
+                    <p>
+                        <label for="desCriptFile">DES-Cript File</label><br/>
+                        <input type="file" name="file"/>
+                    </p>
+
+                    <p>
+                        <button type="submit" class="btn btn-default">
+                            Upload File
+                        </button>
+                    </p>
+                </fieldset>
+            </div>
+        </div>
+    </form>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">DEScript</h1>
+        </div>
+        <div class="panel-body">
+            <form id="desCript_form" action="#" th:action="${flowExecutionUrl}" method="post"
+                  enctype="multipart/form-data">
+                <fieldset>
+                    <legend>Replace Experiment</legend>
+
+                    <p>
+                        <label for="desCriptFile">DES-Cript File</label><br/>
+                        <input type="file" name="desCriptFile" id="desCriptFile"/>
+                    </p>
+
+                    <p>
+                        <button type="submit" id="desCript_submit" name="_eventId_uploadScript" class="btn btn-default">
+                            Upload DEScript
+                        </button>
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+        <div class="panel-footer">Please check node-groups after upload as unresolvable nodes will be skipped</div>
+    </div>
+</div>
+</body>
+</html>

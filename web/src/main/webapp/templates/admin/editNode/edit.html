@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/standard">
+
+<!--@thymesVar id="node" type="de.uni_muenster.cs.comsys.tbmgmt.web.model.node.FilteredNode"-->
+<!--@thymesVar id="flowExecutionUrl" type="String"-->
+<head>
+    <title th:text="${node.id != null ? 'Edit Node ' + node.id : 'Create Node'}">Edit Node</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" th:remove="all"/>
+    <link rel="stylesheet" type="text/css" href="../../../../target/classes/static/stylesheets/main.css"
+          th:href="@{/stylesheets/main.css}" th:remove="all"/>
+</head>
+
+<body>
+<div id="content" layout:fragment="body">
+
+    <div class="page-header">
+        <h1 th:text="${node.id != null ? 'Edit Node ' + node.id : 'Create Node'}">Edit Node</h1>
+    </div>
+
+    <form id="node_form" action="#" th:object="${node}" th:action="${flowExecutionUrl}" method="post"
+          accept-charset="UTF-8">
+
+        <div class="panel panel-danger" th:if="${#fields.hasAnyErrors()}">
+            <div class="panel-heading">
+                <h1 class="panel-title">There were errors in the input</h1>
+            </div>
+            <div class="panel-body">
+                <th:block th:if="${#fields.hasGlobalErrors()}" th:each="err : ${#fields.globalErrors()}">
+                    <p th:text="${err}">Your input had errors</p>
+                </th:block>
+                <th:block th:each="err : ${#fields.detailedErrors()}">
+                    <p th:if="${!err.global}">
+                        <strong th:text="${err.getFieldName()}">Name</strong>: <span th:text="${err.getMessage()}">is wrong</span>
+                    </p>
+                </th:block>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="panel-title">Node</h1>
+            </div>
+            <div class="panel-body">
+
+                <fieldset class="container-fluid">
+                    <legend class="col-xs-12">General Properties</legend>
+
+                    <p th:replace="includes/formControls :: textInput(name='name',id='node_name',label='Name')">
+                        <input type="text" th:field="*{name}"/>
+                    </p>
+
+                    <p th:replace="includes/formControls :: textarea(name='description',id='node_description',label='Description')">
+                        <textarea th:field="*{description}"></textarea>
+                    </p>
+
+
+                    <p th:replace="includes/formControls :: textInput(name='building',id='node_building',label='Building')">
+                        <input type="text" th:field="*{building}"/>
+                    </p>
+
+                    <p th:replace="includes/formControls :: textInput(name='level',id='node_level',label='Level')">
+                        <input type="text" th:field="*{level}"/>
+                    </p>
+
+                    <p th:replace="includes/formControls :: textInput(name='room',id='node_room',label='Room')">
+                        <input type="text" th:field="*{room}"/>
+                    </p>
+
+                    <p th:replace="includes/formControls :: textInput(name='locationX',id='node_locationX',label='Location X')">
+                        <input type="text" th:field="*{locationX}"/>
+                    </p>
+
+                    <p th:replace="includes/formControls :: textInput(name='locationY',id='node_locationY',label='Location Y')">
+                        <input type="text" th:field="*{locationY}"/>
+                    </p>
+
+                    <p th:replace="includes/formControls :: textInput(name='locationZ',id='node_locationZ',label='Location Z')">
+                        <input type="text" th:field="*{locationZ}"/>
+                    </p>
+
+                    <p layout:replace="includes/formControls :: singleSelect(name='type',id='node_type',label='Type')">
+                        <select th:field="*{type}" layout:fragment="options" th:remove="tag">
+                            <option value="name1" th:each="name : ${@nodeTypeDao.names}"
+                                    th:value="${name}"
+                                    th:text="${name}">name1
+                            </option>
+                            <option value="name2" th:remove="all">name2</option>
+                            <option value="name3" th:remove="all">name3</option>
+                        </select>
+                    </p>
+
+                    <p layout:replace="includes/formControls :: singleSelect(name='testbed',id='node_testbed',label='Testbed')">
+                        <select th:field="*{testbed}" layout:fragment="options" th:remove="tag">
+                            <option value="name1" th:each="name : ${@testbedDao.names}"
+                                    th:value="${name}"
+                                    th:text="${name}">name1
+                            </option>
+                            <option value="name2" th:remove="all">name2</option>
+                            <option value="name3" th:remove="all">name3</option>
+                        </select>
+                    </p>
+
+                    <p th:replace="includes/formControls :: textInput(name='imageFolder',id='node_imageFolder',label='Image Folder')">
+                        <input type="text" th:field="*{imageFolder}"/>
+                    </p>
+
+                    <p th:replace="includes/formControls :: textInput(name='kernelName',id='node_kernelName',label='Kernel Name')">
+                        <input type="text" th:field="*{kernelName}"/>
+                    </p>
+
+                    <p th:replace="includes/formControls :: textInput(name='switchName',id='node_switchName',label='Switch Name')">
+                        <input type="text" th:field="*{switchName}"/>
+                    </p>
+                </fieldset>
+
+
+                <th:block th:each="interface, interfaceIterStat : *{interfaces}">
+                    <fieldset class="container-fluid" th:object="${node.interfaces[__${interfaceIterStat.index}__]}">
+                        <legend class="col-xs-12" th:text="|Interface ${interfaceIterStat.count}|">Interface 1</legend>
+
+                        <p th:replace="includes/formControls :: textInput(name='name',id=${#ids.seq('node_interface_name')},label='Name')">
+                            <input type="text" th:field="*{name}"/>
+                        </p>
+
+                        <p layout:replace="includes/formControls :: singleSelect(name='type',id=${#ids.seq('node_interface_type')},label='Type')">
+                            <select th:field="*{type}" layout:fragment="options" th:remove="tag">
+                                <option value="name1" th:each="name : ${@interfaceTypeDao.names}"
+                                        th:value="${name}"
+                                        th:text="${name}">name1
+                                </option>
+                                <option value="name2" th:remove="all">name2</option>
+                                <option value="name3" th:remove="all">name3</option>
+                            </select>
+                        </p>
+
+                        <p th:replace="includes/formControls :: textInput(name='macAddress',id=${#ids.seq('node_interface_macAddress')},label='MAC-Address')">
+                            <input type="text" th:field="*{macAddress}"/>
+                        </p>
+
+                        <p th:replace="includes/formControls :: textInput(name='ipv4Address',id=${#ids.seq('node_interface_ipv4Address')},label='IPv4-Address')">
+                            <input type="text" th:field="*{ipv4Address}"/>
+                        </p>
+
+                        <p th:replace="includes/formControls :: textInput(name='ipv6Address',id=${#ids.seq('node_interface_ipv6Address')},label='IPv6-Address')">
+                            <input type="text" th:field="*{ipv6Address}"/>
+                        </p>
+
+                        <p th:replace="includes/formControls :: checkboxInput(name='controlledOverThisConnection',id=${#ids.seq('node_interface_controlledOverThisConnection')},label='Use interface to control node')">
+                            <input type="text" th:field="*{controlledOverThisConnection}"/>
+                        </p>
+
+                        <p class="row">
+                            <span class="col-xs-12" style="align-content: flex-end; text-align: right;">
+                                <button type="submit" name="_eventId_adjust" class="btn btn-danger"
+                                        value="delI-0" th:value="|delI-${interfaceIterStat.index}|">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    Delete Interface
+                                </button>
+                            </span>
+                        </p>
+                    </fieldset>
+                </th:block>
+
+                <fieldset style="align-content: flex-end; text-align: right;">
+                    <button type="submit" name="_eventId_adjust" class="btn btn-success"
+                            value="addI">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        Add Interface
+                    </button>
+                </fieldset>
+
+                <fieldset class="container-fluid">
+                    <p class="row">
+                            <span class="col-xs-12 col-md-3">
+                                <button type="submit" id="exp_store" name="_eventId_store" class="btn btn-primary"
+                                        style="width: 100%;">
+                                    Store
+                                </button>
+                            </span>
+                            <span class="col-xs-12 col-md-3">
+                                <button type="submit" id="exp_apply" name="_eventId_apply" class="btn btn-info"
+                                        style="width: 100%;">
+                                    Apply current changes
+                                </button>
+                            </span>
+                            <span class="col-xs-12 col-md-3">
+                                <button type="submit" id="exp_discard" name="_eventId_discard" class="btn btn-warning"
+                                        style="width: 100%;">
+                                    Discard current changes
+                                </button>
+                            </span>
+                            <span class="col-xs-12 col-md-3">
+                                <button type="submit" id="exp_cancel" name="_eventId_cancel" class="btn btn-danger"
+                                        style="width: 100%;">
+                                    Cancel
+                                </button>
+                            </span>
+                    </p>
+                </fieldset>
+            </div>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,3 @@
+#!/bin/bash
+pids=$(pidof dnsmasq)
+kill -1 $pids

@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/standard">
+<head>
+    <title>Error page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../../../../target/classes/static/stylesheets/main.css"
+          th:href="@{/stylesheets/main.css}"/>
+</head>
+<body>
+<div id="content" layout:fragment="body">
+    <h1 th:text="${errorCode}">500</h1>
+
+    <p th:text="${errorMessage}">java.lang.NullPointerException</p>
+</div>
+</body>
+</html>

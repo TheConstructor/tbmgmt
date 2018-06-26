@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/standard">
+
+<!--@thymesVar id="tag" type="de.uni_muenster.cs.comsys.tbmgmt.web.model.FilteredUniquelyNamedEntity"-->
+<!--@thymesVar id="flowExecutionUrl" type="String"-->
+<head>
+    <title th:text="${tag.id != null ? 'Edit Tag ' + tag.id : 'Create Tag'}">Edit Tag</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" th:remove="all"/>
+    <link rel="stylesheet" type="text/css" href="../../../../target/classes/static/stylesheets/main.css"
+          th:href="@{/stylesheets/main.css}" th:remove="all"/>
+</head>
+
+<body>
+<div id="content" layout:fragment="body">
+
+    <div class="page-header">
+        <h1 th:text="${tag.id != null ? 'Edit Tag ' + tag.id : 'Create Tag'}">Edit Tag</h1>
+    </div>
+
+    <form id="tag_form" action="#" th:object="${tag}" th:action="${flowExecutionUrl}" method="post"
+          accept-charset="UTF-8">
+
+        <div class="panel panel-danger" th:if="${#fields.hasAnyErrors()}">
+            <div class="panel-heading">
+                <h1 class="panel-title">There were errors in the input</h1>
+            </div>
+            <div class="panel-body">
+                <th:block th:if="${#fields.hasGlobalErrors()}" th:each="err : ${#fields.globalErrors()}">
+                    <p th:text="${err}">Your input had errors</p>
+                </th:block>
+                <th:block th:each="err : ${#fields.detailedErrors()}">
+                    <p th:if="${!err.global}">
+                        <strong th:text="${err.getFieldName()}">Name</strong>: <span th:text="${err.getMessage()}">is wrong</span>
+                    </p>
+                </th:block>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="panel-title">Tag</h1>
+            </div>
+            <div class="panel-body">
+
+                <fieldset class="container-fluid">
+                    <legend class="col-xs-12">General Properties</legend>
+
+                    <p th:replace="includes/formControls :: textInput(name='name',id='tag_name',label='Name')">
+                        <input type="text" th:field="*{name}"/>
+                    </p>
+                </fieldset>
+
+                <fieldset class="container-fluid">
+                    <p class="row">
+                        <span class="col-xs-12 col-md-3">
+                            <button type="submit" id="exp_store" name="_eventId_store" class="btn btn-primary"
+                                    style="width: 100%;">
+                                Store
+                            </button>
+                        </span>
+                        <span class="col-xs-12 col-md-3">
+                            <button type="submit" id="exp_apply" name="_eventId_apply" class="btn btn-info"
+                                    style="width: 100%;">
+                                Apply current changes
+                            </button>
+                        </span>
+                        <span class="col-xs-12 col-md-3">
+                            <button type="submit" id="exp_discard" name="_eventId_discard" class="btn btn-warning"
+                                    style="width: 100%;">
+                                Discard current changes
+                            </button>
+                        </span>
+                        <span class="col-xs-12 col-md-3">
+                            <button type="submit" id="exp_cancel" name="_eventId_cancel" class="btn btn-danger"
+                                    style="width: 100%;">
+                                Cancel
+                            </button>
+                        </span>
+                    </p>
+                </fieldset>
+            </div>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

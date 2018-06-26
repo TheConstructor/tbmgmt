@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.springframework.org/schema/webflow"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <!--
+    Für flow-Definitionen in Ordnern ist der Pfad ab dem Basis-Pfad bis zum enthaltenden Ordner die id.
+    Aus /templates/blubb/blubb/blah-flow.xml wird also z.B. blubb/blubb
+     -->
+
+    <secured attributes="IS_AUTHENTICATED_FULLY,ROLE_USER"/>
+
+    <persistence-context/>
+
+    <on-start>
+        <evaluate expression="viewExperiment.provideEntity(requestParameters.id)"
+                  result="flowScope.dbExperiment"/>
+        <evaluate
+                expression="new de.uni_muenster.cs.comsys.tbmgmt.web.model.experiment.FilteredExperimentWithLog(dbExperiment)"
+                result="flowScope.experiment"/>
+    </on-start>
+
+    <view-state id="view" model="experiment" view="viewExperiment/view">
+        <binder>
+            <!-- allow only changing these view-targeted-attributes -->
+            <binding property="activeTab"/>
+            <binding property="onlyContaining"/>
+            <binding property="onlyReplication"/>
+            <binding property="onlyIteration"/>
+            <binding property="onlyNode"/>
+            <binding property="onlyActionBlock"/>
+            <binding property="onlyAction"/>
+            <binding property="onlyLogLevel"/>
+        </binder>
+        <transition on="apply" validate="false"/>
+        <transition on="export" bind="false" validate="false">
+            <evaluate expression="desCriptRenderAction">
+                <attribute name="flowVariable" value="dbExperiment"/>
+            </evaluate>
+        </transition>
+        <transition on="cancel" to="cancel" bind="false" validate="false" history="discard"/>
+    </view-state>
+
+    <end-state id="cancel" commit="false"/>
+
+</flow>

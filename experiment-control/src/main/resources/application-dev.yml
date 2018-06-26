@@ -1,0 +1,24 @@
+tbmgmt:
+  files:
+    upload-temp-dir: "/tmp/tbmgmt/upload" # Can be a dummy, but must be present
+    evaluation-script-storage-dir: "/tmp/tbmgmt/files"
+    experiment-file-storage-dir: "/tmp/tbmgmt/files"
+  db:
+    jdbc-url: "jdbc:postgresql://localhost:5432/tb_db"
+    user: "tbmgmt"
+    password: "S8TgInXjaj3Sw4rLHgSNbp6hFu32qVXcvKyM8n0nTw"
+    #create-drop über web-Modul...
+    hbm2ddlAuto: "validate"
+    show-sql: false
+  experiment:
+    control:
+      automation-username: "tbmgmt"
+
+logging:
+  level:
+    de.uni_muenster.cs.comsys.tbmgmt: DEBUG
+
+# Don't act as server...
+shell:
+  ssh.enabled: false
+  telnet.enabled: false

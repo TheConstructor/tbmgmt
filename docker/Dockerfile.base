@@ -1,0 +1,100 @@
+# Version 0.0.2
+FROM ubuntu:latest
+MAINTAINER Tim Loepmeier "loepmeier@wwu.de"
+ENV TESTBED_VERSION=0.0.2
+
+# Proxy.
+#ENV https_proxy=http://10.5.201.137:3128 \
+#    http_proxy=http://10.5.201.137:3128
+
+ENV TERM=xterm \
+    GOSU_VERSION=1.7
+
+#DES ADMIN
+ENV CONFIGFOLDER=/export/configs \
+    PXE_INDIR=/export/configs/pxelinux_cfg_static_entrys
+
+#NFS Exports
+ENV NFS_IP=10.5.202.8 \
+    NFS_MAIN_FOLDER=/srv \
+    ROOTFS_FOLDER=rootfs \
+    HOME_FOLDER=home \
+    ROOT_USER_FOLDER=root
+
+# new ENV so we can use the values defined beforehand
+ENV NFS_DFLT_ROOTFS_PATH=$NFS_IP:$NFS_MAIN_FOLDER/$ROOTFS_FOLDER \
+    NFS_DFLT_HOME_PATH=$NFS_IP:$NFS_MAIN_FOLDER/$HOME_FOLDER \
+    NFS_DFLT_ROOTUSERHOME_PATH=$NFS_IP:$NFS_MAIN_FOLDER/$ROOT_USER_FOLDER
+
+#DATABASE
+ENV DBHOST=mydb \
+    DATABASE_NAME=comsysdb
+
+#DNSMASQ Settings
+ENV TFTP_FOLDER=/export/tftp \
+    DNSMASQ_PXEFOLDER=pxelinux.cfg \
+    HOSTFILE_DIR=hosts \
+    DHCP_HOSTFILE_DIR=dhcp-hosts
+
+#Networking
+ENV TESTBED_CONTROL_SERVER_HOSTNAME=COMSYS-TESTBED-SERVER \
+    TESTBED_CONTROL_SERVER_IP=10.5.202.8 \
+    TESTBED_CONTROL_SERVER_SUBNET=255.255.255.0 \
+    TESTBED_DOMAIN=home
+
+ENV DHCP_RANGE=10.5.202.1,10.5.202.242,$TESTBED_CONTROL_SERVER_SUBNET \
+    SMTPSERVER=10.5.201.137 \
+    TESTBEDMAIL=testbed-user@comsys-portal.uni-muenster.de
+
+#VIRTUALIZERE
+ENV VIRT_IP_RANGE="10.5.202.12,COMSYS-VIRT-NODE-01 10.5.202.11,COMSYS-VIRT-NODE-02 10.5.202.10,COMSYS-VIRT-NODE-03 10.5.202.9,COMSYS-VIRT-NODE-04 10.5.202.17,COMSYS-VIRT-NODE-05 10.5.202.16,COMSYS-VIRT-NODE-06" \
+    VIRT_PUB_KEY_SSH="ssh-rsa abc"
+
+#DEFAULT KERVEL FOR DNSMASQ
+ENV ARCH=i386 \
+    DIST=jessie \
+    MIRROR=http://ftp.de.debian.org \
+    DFLT_KERNEL_NAME=vmlinuz
+
+#FILESYSTEM NODES
+ENV SSH_PUB_KEY="ssh-rsa defg"
+
+#WHERE ARE EXPORTED HOME ON FILESYSTEM
+ENV NFS_HOME_PATH=$NFS_MAIN_FOLDER/$HOME_FOLDER \
+    NFS_ROOTUSER_PATH=$NFS_MAIN_FOLDER/$ROOT_USER_FOLDER \
+    NFS_ROOT_PATH=NFS_MAIN_FOLDER/$ROOTFS_FOLDER
+
+RUN echo Europe/Berlin > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+
+
+# gosu-snippet extracted from https://github.com/docker-library/postgres/blob/ed23320582f4ec5b0e5e35c99d98966dacbc6ed8/9.4/Dockerfile
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
+RUN apt-get -q update \
+    && DEBIAN_FRONTEND=noninteractive apt-get -yqq install --no-install-recommends \
+        python-software-properties \
+        software-properties-common \
+    && add-apt-repository ppa:webupd8team/java \
+    && apt-get -q update \
+    && echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
+    && echo debconf shared/accepted-oracle-license-v1-1 seen true |  debconf-set-selections \
+    && DEBIAN_FRONTEND=noninteractive apt-get -yqq install --no-install-recommends \
+        ca-certificates \
+        man \
+        maven \
+        nano \
+        oracle-java8-installer \
+        ssh \
+        wget \
+	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture)" \
+	&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture).asc" \
+	&& gpg --verify /usr/local/bin/gosu.asc \
+	&& rm /usr/local/bin/gosu.asc \
+	&& chmod +x /usr/local/bin/gosu \
+	&& apt-get purge -y --auto-remove \
+	    python-software-properties \
+	    software-properties-common \
+	&& apt-get autoclean \
+	&& apt-get clean
+
+# removing wget would cause java and maven to be removed too. Great.
+# removing ca-certificates would render descendend images unable to verify https-signatures

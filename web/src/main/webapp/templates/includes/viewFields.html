@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Form Controlls</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.css"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap', 'css/bootstrap.min.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap-theme.css"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap', 'css/bootstrap-theme.min.css')}}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/css/bootstrap-select.min.css"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap-select', 'css/bootstrap-select.min.css')}}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css"
+          th:href="@{${@webJarUrlUtil.getUrl('Eonasdan-bootstrap-datetimepicker', 'bootstrap-datetimepicker.min.css')}}"/>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.js"
+            th:src="@{${@webJarUrlUtil.getUrl('jquery', 'jquery.min.js')}}"></script>
+</head>
+<body>
+<form>
+    <fieldset class="container-fluid">
+        <legend class="col-xs-12">General Properties</legend>
+
+        <div class="form-group" th:fragment="textInput (name,id,label)">
+            <p class="row">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_name" th:for="${id}" th:text="${label}">Name</label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9"
+                      id="exp_name" th:id="${id}" th:text="*{{__${name}__}}"
+                      th:title="${!#strings.isEmpty(title)}?${title}"
+                      th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'">
+                    Text
+                </span>
+            </p>
+
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_name').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+        <div class="form-group" th:fragment="textarea (name,id,label)">
+            <p class="row">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_description" th:for="${id}" th:text="${label}">
+                        Description
+                    </label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9"
+                      id="exp_description" th:id="${id}" th:text="*{__${name}__}"
+                      th:title="${!#strings.isEmpty(title)}?${title}"
+                      th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'">
+                    Text
+                </span>
+            </p>
+
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_description').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+        <th:block th:fragment="datetimeInput (name,id,label)">
+            <p class="row">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_startTime" th:for="${id}" th:text="${label}">
+                        Description
+                    </label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9"
+                      id="exp_startTime" th:id="${id}"
+                      th:title="${!#strings.isEmpty(title)}?${title}"
+                      th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'">
+                    <th:block th:text="*{{__${name}__}}">2016-03-11 05:00:00 +01:00</th:block>
+                    <script type="text/javascript" th:inline="javascript">
+                        //<![CDATA[
+                        $(function () {
+                            const format = 'YYYY-MM-DD HH:mm:ss Z';
+                            $(/*[[${'#'+id}]]*/ "#exp_startTime").text(moment(
+                                    /*[[*{{__${name}__}}]]*/ '2016-03-11 05:00:00 +01:00',
+                                    format
+                            ).tz(moment.tz.guess()).format(format));
+                        });//]]>
+                    </script>
+                </span>
+            </p>
+
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_startTime').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </th:block>
+
+        <div class="form-group" th:fragment="checkboxInput (name,id,label)">
+            <p class="row">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_restartNodes" th:for="${id}" th:text="${label}">
+                        Restart nodes?
+                    </label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9"
+                      id="exp_restartNodes" th:id="${id}"
+                      th:title="${!#strings.isEmpty(title)}?${title}"
+                      th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'">
+                    <span th:if="*{__${name}__}" class="glyphicon glyphicon-ok"></span>
+                    <span th:unless="*{__${name}__}" class="glyphicon glyphicon-remove"></span>
+                </span>
+            </p>
+
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_restartNodes').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+        <div class="form-group" layout:fragment="singleSelect (name,id,label)">
+            <p class="row">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_nodeGroup_role" th:for="${id}" th:text="${label}">
+                        Description
+                    </label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9"
+                      id="exp_nodeGroup_role" th:id="${id}"
+                      th:title="${!#strings.isEmpty(title)}?${title}"
+                      th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'">
+                    <span class="label label-default" th:text="*{__${name}__}">Text</span>
+                </span>
+            </p>
+
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_nodeGroup_role').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+
+        <div class="form-group" layout:fragment="multiSelect (name,id,label,title)">
+            <p class="row">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_nodeGroup_nodes" th:for="${id}" th:text="${label}">
+                        Description
+                    </label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9"
+                      id="exp_nodeGroup_nodes" th:id="${id}"
+                      th:title="${!#strings.isEmpty(title)}?${title}"
+                      th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'">
+                    <span class="label label-default" th:text="${value}" th:each="value : *{__${name}__}">Text</span>
+                </span>
+            </p>
+
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_nodeGroup_nodes').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+
+        <div class="form-group" layout:fragment="tagInput (name,id,label)">
+            <p class="row">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_tags" th:for="${id}" th:text="${label}">
+                        Description
+                    </label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9"
+                      id="exp_tags" th:id="${id}"
+                      th:title="${!#strings.isEmpty(title)}?${title}"
+                      th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'">
+                    <span class="label label-default" th:text="${value}" th:each="value : *{__${name}__}">Text</span>
+                </span>
+            </p>
+
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_tags').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+    </fieldset>
+</form>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"
+        th:src="@{${@webJarUrlUtil.getUrl('momentjs', 'min/moment.min.js')}}"></script>
+<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.js"
+        th:src="@{${@webJarUrlUtil.getUrl('bootstrap', 'js/bootstrap.min.js')}}"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/js/bootstrap-select.min.js"
+        th:src="@{${@webJarUrlUtil.getUrl('bootstrap-select', 'js/bootstrap-select.min.js')}}"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.15.35/js/bootstrap-datetimepicker.min.js"
+        th:src="@{${@webJarUrlUtil.getUrl('Eonasdan-bootstrap-datetimepicker', 'bootstrap-datetimepicker.min.js')}}"></script>
+<script type="text/javascript">
+    /* <![CDATA[ */
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+    $('.selectpicker').selectpicker();
+    /* ]]> */
+</script>
+</body>
+</html>

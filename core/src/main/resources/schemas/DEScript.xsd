@@ -1,0 +1,173 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xsd:element name="experiment" type="experimentType"/>
+    <xsd:complexType name="experimentType">
+        <xsd:sequence>
+            <xsd:element name="general" type="generalType"/>
+            <xsd:element name="actions" type="actionsType"/>
+            <xsd:element name="results" type="resultsType" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="version" type="xsd:string" use="optional"/>
+        <xsd:attribute name="generator" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+    <xsd:complexType name="generalType">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="start_time" type="xsd:string"/>
+            <xsd:element name="duration" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="iterations" type="xsd:long"/>
+            <xsd:element name="iteration_pause" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="sample_interval" type="xsd:long"/>
+            <xsd:element name="restart_nodes" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="lock_testbed" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="groups" type="groupsType"/>
+            <xsd:element name="files" type="filesType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="groupsType">
+        <xsd:sequence>
+            <xsd:element name="group" type="groupType" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="groupType">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="role" type="xsd:string"/>
+            <xsd:element name="members" type="membersType" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="membersType">
+        <xsd:sequence>
+            <xsd:element name="node" type="nodeType" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="nodeType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="id" type="xsd:string" use="required"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="filesType">
+        <xsd:sequence>
+            <xsd:element name="file" type="fileType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="fileType">
+        <xsd:sequence>
+            <xsd:element name="filename" type="xsd:string"/>
+            <xsd:element name="description" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="eval" type="xsd:boolean" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="actionsType">
+        <xsd:sequence>
+            <xsd:element name="variables" type="variableBlockType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="action_block" type="actionBlockType" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="actionBlockType">
+        <xsd:sequence>
+            <xsd:element name="action" type="actionType" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:integer" use="required"/>
+        <xsd:attribute name="execution_mode" type="executionmodetype" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="actionType">
+        <xsd:sequence>
+            <xsd:element name="command" type="xsd:string"/>
+            <xsd:element name="group" type="xsd:string"/>
+            <xsd:element name="start_time" type="xsd:long" nillable="true"/>
+            <xsd:element name="duration" type="xsd:long" nillable="true"/>
+            <xsd:element name="evaluation_script" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+            <xsd:element name="evaluation_parameter" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:integer"/>
+    </xsd:complexType>
+    <xsd:complexType name="variableBlockType">
+        <xsd:sequence>
+            <xsd:element name="variable" type="variableType" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="variableType">
+        <xsd:sequence>
+            <xsd:element name="type" type="xsd:string"/>
+            <xsd:element name="range" type="variableRange" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="step" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="values" type="arrayValues" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="variableRange">
+        <xsd:sequence>
+            <xsd:element name="start" type="xsd:string"/>
+            <xsd:element name="end" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="arrayValues">
+        <xsd:sequence>
+            <xsd:element name="value" type="xsd:string" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="executionmodetype">
+        <xsd:annotation>
+            <xsd:documentation>
+                Execution-mode. 0=Server, 1=Serial, 2=Parallel, 3=Timed
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="3"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="resultsType">
+        <xsd:sequence>
+            <xsd:element name="replication" type="replicationType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="replicationType">
+        <xsd:sequence>
+            <xsd:element name="iteration" type="iterationType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="iterationType">
+        <xsd:sequence>
+            <xsd:element name="variableValues" type="variableValuesType" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="action_block" type="resultActionBlockType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="variableValuesType">
+        <xsd:sequence>
+            <xsd:element name="variableValue" type="variableValueType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="variableValueType">
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="resultActionBlockType">
+        <xsd:sequence>
+            <xsd:element name="action" type="resultActionType" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="resultActionType">
+        <xsd:sequence>
+            <xsd:element name="invocation" type="invocationType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="invocationType">
+        <xsd:sequence>
+            <xsd:element name="node" type="nodeType" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="addressValues" type="variableValuesType" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="result" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+        <xsd:attribute name="startedAfter" type="xsd:string" use="required"/>
+        <xsd:attribute name="endedBefore" type="xsd:string" use="optional"/>
+        <xsd:attribute name="returnCode" type="xsd:integer" use="optional"/>
+    </xsd:complexType>
+</xsd:schema>

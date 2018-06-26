@@ -1,0 +1,19 @@
+spring:
+  main:
+    banner-mode: OFF
+
+tbmgmt:
+  files:
+    upload-temp-dir: "/tmp/upload"
+    evaluation-script-storage-dir: "/tbmgmt/files"
+    experiment-file-storage-dir: "/tbmgmt/files"
+  db:
+    jdbc-url: "jdbc:postgresql://postgresql:5432/tbmgmt"
+    user: "tbmgmt"
+    password: "S8TgInXjaj3Sw4rLHgSNbp6hFu32qVXcvKyM8n0nTw"
+    hbm2ddlAuto: "update"
+    show-sql: false
+
+logging:
+  level:
+    de.uni_muenster.cs: INFO

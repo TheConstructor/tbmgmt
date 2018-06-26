@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/standard">
+<head>
+    <title>Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" th:remove="all"/>
+    <link rel="stylesheet" type="text/css" href="../../../../target/classes/static/stylesheets/main.css"
+          th:href="@{/stylesheets/main.css}" th:remove="all"/>
+</head>
+<body>
+<div id="content" layout:fragment="body">
+
+    <div class="page-header">
+        <h1>Login</h1>
+    </div>
+
+    <div class="panel panel-danger" th:if="${param.login_error}"
+         th:with="lastExceptionKey=${T(org.springframework.security.web.WebAttributes).AUTHENTICATION_EXCEPTION}">
+        <div class="panel-heading">
+            <h1 class="panel-title">Your login attempt was not successful, try again.</h1>
+        </div>
+        <div class="panel-body" th:if="${session} and ${session[__${lastExceptionKey}__]}">
+            Reason: <span th:text="${session[__${lastExceptionKey}__].message}">Invalid password</span>
+        </div>
+    </div>
+
+    <form name="f" action="#" th:action="@{/login}" method="post" accept-charset="UTF-8">
+    <div class="panel panel-default"
+         th:with="lastUsernameKey=${T(de.uni_muenster.cs.comsys.tbmgmt.web.support.UsernameCachingAuthenticationFailureHandler).LAST_USERNAME_KEY}">
+        <div class="panel-heading">
+            <h1 class="panel-title">Login</h1>
+        </div>
+        <div class="panel-body">
+
+            <fieldset class="container-fluid">
+
+                <legend class="col-xs-12">Login Information</legend>
+
+                <p class="row">
+                    <span class="col-xs-12 col-md-4 col-lg-3">
+                        <label for="username">User:</label>
+                    </span>
+                    <span class="col-xs-12 col-md-8 col-lg-9">
+                        <input type="text" name="username" id="username" class="form-control"
+                               th:value="${session} ? ${session[__${lastUsernameKey}__]} : ''"/>
+                    </span>
+                </p>
+
+                <p class="row">
+                    <span class="col-xs-12 col-md-4 col-lg-3">
+                        <label for="password">Password:</label>
+                    </span>
+                    <span class="col-xs-12 col-md-8 col-lg-9">
+                        <input type="password" name="password" id="password" class="form-control"/>
+                    </span>
+                </p>
+
+
+                <p class="row">
+                    <span class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                        <span class="checkbox">
+                            <label>
+                                <input type="checkbox" name="remember-me" value="on" id="remember_me"/>
+                                Don't ask for my password for two weeks
+                            </label>
+                        </span>
+                    </span>
+                </p>
+
+                <p class="row">
+                    <span class="col-xs-12">
+                        <button id="submit" type="submit" class="btn btn-default">Login</button>
+                    </span>
+                </p>
+
+            </fieldset>
+
+        </div>
+    </div>
+
+    </form>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/standard">
+<head>
+    <title>InterfaceTypes</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" th:remove="all"/>
+    <link rel="stylesheet" type="text/css" href="../../../../target/classes/static/stylesheets/main.css"
+          th:href="@{/stylesheets/main.css}" th:remove="all"/>
+</head>
+<body>
+<!--/*@thymesVar id="pagination" type="de.uni_muenster.cs.comsys.tbmgmt.web.model.Pagination<de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.node.InterfaceType>"*/-->
+<div id="content" layout:fragment="body">
+
+    <div class="page-header">
+        <h1>InterfaceTypes</h1>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">InterfaceTypes</h3>
+        </div>
+        <div class="panel-body">
+            <nav th:replace="includes/pagination :: pagination(pagination=${pagination},url='/admin/interfaceTypes')">
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="#" aria-label="Previous"
+                           th:href="@{/admin/interfaceTypes(page=${pagination.currentPage - 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage gt 0}">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a href="#" aria-label="Next"
+                           th:href="@{/admin/interfaceTypes(page=${pagination.currentPage + 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage + 1 lt pagination.pageCount}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Interfaces</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="interfaceType, interfaceTypeIterStat : ${pagination.entities}">
+                        <td th:text="${interfaceType.id}">1</td>
+                        <td th:text="${interfaceType.name}">e62-1</td>
+                        <td th:text="${@interfaceTypeDao.countUsages(interfaceType)}">42</td>
+                        <td>
+                            <a href="editInterfaceType/edit.html" class="btn btn-primary"
+                               th:href="@{/admin/editInterfaceType(id=${interfaceType.id})}">Edit</a>
+                            <form action="#" method="post"
+                                  th:action="@{/admin/interfaceTypes/{id}/delete(id=${interfaceType.id})}"
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Do you really want to delete the interfaceType?');"
+                                  th:onsubmit="'return confirm(\'Do you really want to delete the interfaceType &quot;'+${interfaceType.name}+'&quot;?\');'">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="text-right">
+                <a href="editInterfaceType/edit.html" class="btn btn-success" th:href="@{/admin/editInterfaceType}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Add InterfaceType
+                </a>
+            </p>
+
+            <nav th:replace="includes/pagination :: pagination(pagination=${pagination},url='/admin/interfaceTypes')">
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="#" aria-label="Previous"
+                           th:href="@{/admin/interfaceTypes(page=${pagination.currentPage - 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage gt 0}">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a href="#" aria-label="Next"
+                           th:href="@{/admin/interfaceTypes(page=${pagination.currentPage + 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage + 1 lt pagination.pageCount}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>

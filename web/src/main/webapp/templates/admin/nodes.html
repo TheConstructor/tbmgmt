@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/standard">
+<head>
+    <title>Nodes</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" th:remove="all"/>
+    <link rel="stylesheet" type="text/css" href="../../../../target/classes/static/stylesheets/main.css"
+          th:href="@{/stylesheets/main.css}" th:remove="all"/>
+</head>
+<body>
+<!--/*@thymesVar id="pagination" type="de.uni_muenster.cs.comsys.tbmgmt.web.model.Pagination<de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.node.Node>"*/-->
+<div id="content" layout:fragment="body">
+
+    <div class="page-header">
+        <h1>Nodes</h1>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Nodes</h3>
+        </div>
+        <div class="panel-body">
+            <nav th:replace="includes/pagination :: pagination(pagination=${pagination},url='/admin/nodes')">
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="#" aria-label="Previous"
+                           th:href="@{/admin/nodes(page=${pagination.currentPage - 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage gt 0}">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a href="#" aria-label="Next"
+                           th:href="@{/admin/nodes(page=${pagination.currentPage + 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage + 1 lt pagination.pageCount}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Building</th>
+                        <th>Room</th>
+                        <th>Interfaces</th>
+                        <th>Usages</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="node, nodeIterStat : ${pagination.entities}">
+                        <td th:text="${node.id}">1</td>
+                        <td th:text="${node.name}">e62-1</td>
+                        <td th:text="${node.building}">e62</td>
+                        <td th:text="${node.room}">101</td>
+                        <td th:text="${#lists.size(node.interfaces)}+': '+${node.interfaceShortlist}"></td>
+                        <td th:text="${@nodeDao.countUsages(node)}">42</td>
+                        <td>
+                            <a href="editNode/edit.html" class="btn btn-primary"
+                               th:href="@{/admin/editNode(id=${node.id})}">Edit</a>
+                            <form action="#" method="post" th:action="@{/admin/nodes/{id}/delete(id=${node.id})}"
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Do you really want to delete the node?');"
+                                  th:onsubmit="'return confirm(\'Do you really want to delete the node &quot;'+${node.name}+'&quot;?\');'">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="text-right">
+                <a href="editNode/edit.html" class="btn btn-success" th:href="@{/admin/editNode}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Add Node
+                </a>
+            </p>
+
+            <nav th:replace="includes/pagination :: pagination(pagination=${pagination},url='/admin/nodes')">
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="#" aria-label="Previous"
+                           th:href="@{/admin/nodes(page=${pagination.currentPage - 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage gt 0}">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a href="#" aria-label="Next"
+                           th:href="@{/admin/nodes(page=${pagination.currentPage + 1},perPage=${pagination.perPage})}"
+                           th:if="${pagination.currentPage + 1 lt pagination.pageCount}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>

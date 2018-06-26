@@ -1,0 +1,11 @@
+# Version 0.0.1
+FROM tbmgmt_tbmgmt
+
+MAINTAINER Matthias Vill "m_vill04@wwu.de"
+
+WORKDIR /
+RUN cp "/install/experiment-control-${TBMGMT_VERSION}.jar" /experiment-control.jar \
+    && rm -rf /install
+
+#ENTRYPOINT [ "gosu", "testbed-user", "/usr/bin/java", "-jar", "/experiment-control.jar" ]
+ENTRYPOINT ["/usr/bin/java", "-jar", "/experiment-control.jar"]

@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Form Controlls</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.css"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap', 'css/bootstrap.min.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap-theme.css"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap', 'css/bootstrap-theme.min.css')}}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/css/bootstrap-select.min.css"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap-select', 'css/bootstrap-select.min.css')}}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css"
+          th:href="@{${@webJarUrlUtil.getUrl('Eonasdan-bootstrap-datetimepicker', 'bootstrap-datetimepicker.min.css')}}"/>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.js"
+            th:src="@{${@webJarUrlUtil.getUrl('jquery', 'jquery.min.js')}}"></script>
+</head>
+<body>
+
+<!--/*@thymesVar id="pagination" type="de.uni_muenster.cs.comsys.tbmgmt.web.model.Pagination<?>"*/-->
+<nav th:fragment="pagination (pagination,url)" th:if="${pagination.pageCount gt 1}">
+    <ul class="pager">
+        <li class="previous" th:if="${pagination.currentPage gt 0}">
+            <a href="#" aria-label="Previous"
+               th:href="@{${url + pagination.initialQuery}(page=${pagination.currentPage - 1},perPage=${pagination.perPage})}">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <ul class="pagination" style="margin: 0 auto;">
+            <th:block th:each="page : ${pagination.offeredPages}">
+                <li class="disabled" th:if="${page} != 0 and not ${pagination.offeredPages.contains(page - 1)}">
+                    <span aria-hidden="true">&hellip;</span>
+                </li>
+                <li th:classappend="${page == pagination.currentPage}? 'active'">
+                    <a href="#"
+                       th:href="@{${url + pagination.initialQuery}(page=${page},perPage=${pagination.perPage})}"
+                       th:text="${page + 1}">
+                        1
+                    </a>
+                </li>
+            </th:block>
+            <li th:remove="all"><a href="#">2</a></li>
+            <li th:remove="all"><a href="#">3</a></li>
+            <li th:remove="all"><a href="#">4</a></li>
+            <li th:remove="all"><a href="#">5</a></li>
+        </ul>
+        <li class="next" th:if="${pagination.currentPage + 1 lt pagination.pageCount}">
+            <a href="#" aria-label="Next"
+               th:href="@{${url + pagination.initialQuery}(page=${pagination.currentPage + 1},perPage=${pagination.perPage})}">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"
+        th:src="@{${@webJarUrlUtil.getUrl('momentjs', 'min/moment.min.js')}}"></script>
+<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.js"
+        th:src="@{${@webJarUrlUtil.getUrl('bootstrap', 'js/bootstrap.min.js')}}"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/js/bootstrap-select.min.js"
+        th:src="@{${@webJarUrlUtil.getUrl('bootstrap-select', 'js/bootstrap-select.min.js')}}"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.15.35/js/bootstrap-datetimepicker.min.js"
+        th:src="@{${@webJarUrlUtil.getUrl('Eonasdan-bootstrap-datetimepicker', 'bootstrap-datetimepicker.min.js')}}"></script>
+<script type="text/javascript">
+    /* <![CDATA[ */
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+    $('.selectpicker').selectpicker();
+    /* ]]> */
+</script>
+</body>
+</html>

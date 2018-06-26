@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/standard">
+<head>
+    <title>Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" th:remove="all"/>
+    <link rel="stylesheet" type="text/css" href="../../../../target/classes/static/stylesheets/main.css"
+          th:href="@{/stylesheets/main.css}" th:remove="all"/>
+</head>
+<body>
+<!--/*@thymesVar id="runningExperiments" type="java.util.List<de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.experiment.Experiment>"*/-->
+<!--/*@thymesVar id="scheduledExperiments" type="java.util.List<de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.experiment.Experiment>"*/-->
+<!--/*@thymesVar id="scheduleCutOff" type="java.time.Instant"*/-->
+<div id="content" layout:fragment="body">
+
+    <div class="page-header">
+        <h1>Greetings!</h1>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">TBMGMT</h1>
+        </div>
+        <div class="panel-body">
+            <p>Welcome to TBMGMT, a software to conduct experiments with focus on wireless networks.</p>
+
+            <p>
+                After logging-in you can create new experiments using the experiment-menu at the top of this page or
+                download results of experiments in DEScript-format.
+            </p>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">Running Experiments</h1>
+        </div>
+        <div class="panel-body">
+            <p th:if="${#lists.isEmpty(runningExperiments)}">
+                Currently no experiments are running.
+            </p>
+            <div class="table-responsive" th:unless="${#lists.isEmpty(runningExperiments)}">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Tags</th>
+                        <th>Status</th>
+                        <th>Start Time</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="experiment, experimentIterStat : ${runningExperiments}">
+                        <td th:text="${experiment.id}">1</td>
+                        <td>
+                            <a href="#" th:href="@{/viewExperiment(id=${experiment.id})}"
+                               th:text="${#strings.abbreviate(experiment.name, 42)}">e62-1</a>
+                        </td>
+                        <td>
+                            <th:block th:each="tag, ti : ${experiment.tags}">
+                                <a href="#" th:href="@{/experiments/(tags=${tag.name})}">
+                                    <span class="label label-default" th:text="${tag.name}">Tag</span>
+                                </a>
+                            </th:block>
+                        </td>
+                        <td th:text="${experiment.state}">SCHEDULED</td>
+                        <td id="exp_startTime_1" th:id="${#ids.seq('exp_startTime')}">
+                            <th:block th:text="${{experiment.startTime}}">2016-03-11 05:00:00 +01:00</th:block>
+                            <script type="text/javascript" th:inline="javascript">
+                                //<![CDATA[
+                                $(function () {
+                                    const format = 'YYYY-MM-DD HH:mm:ss Z';
+                                    $(/*[[${'#'+#ids.prev('exp_startTime')}]]*/ "#exp_startTime_1").text(moment(
+                                            /*[[${{experiment.startTime}}]]*/ '2016-03-11 05:00:00 +01:00',
+                                            format
+                                    ).tz(moment.tz.guess()).format(format));
+                                });//]]>
+                            </script>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">Scheduled Experiments</h1>
+        </div>
+        <div class="panel-body">
+            <p th:if="${#lists.isEmpty(scheduledExperiments)}">
+                No experiments are scheduled to start until
+                <span id="scheduleCutOff">
+                    <th:block th:text="${{scheduleCutOff}}">2016-03-11 05:00:00 +01:00</th:block>
+                    <script type="text/javascript" th:inline="javascript">
+                        //<![CDATA[
+                        $(function () {
+                            const format = 'YYYY-MM-DD HH:mm:ss Z';
+                            $("#scheduleCutOff").text(moment(
+                                    /*[[${{scheduleCutOff}}]]*/ '2016-03-11 05:00:00 +01:00',
+                                    format
+                            ).tz(moment.tz.guess()).format(format));
+                        });//]]>
+                    </script>
+                </span>.
+            </p>
+            <div class="table-responsive" th:unless="${#lists.isEmpty(scheduledExperiments)}">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Tags</th>
+                        <th>Status</th>
+                        <th>Start Time</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="experiment, experimentIterStat : ${scheduledExperiments}">
+                        <td th:text="${experiment.id}">1</td>
+                        <td>
+                            <a href="#" th:href="@{/viewExperiment(id=${experiment.id})}"
+                               th:text="${#strings.abbreviate(experiment.name, 42)}">e62-1</a>
+                        </td>
+                        <td>
+                            <th:block th:each="tag, ti : ${experiment.tags}">
+                                <a href="#" th:href="@{/experiments/(tags=${tag.name})}">
+                                    <span class="label label-default" th:text="${tag.name}">Tag</span>
+                                </a>
+                            </th:block>
+                        </td>
+                        <td th:text="${experiment.state}">SCHEDULED</td>
+                        <td id="exp_startTime_2" th:id="${#ids.seq('exp_startTime')}">
+                            <th:block th:text="${{experiment.startTime}}">2016-03-11 05:00:00 +01:00</th:block>
+                            <script type="text/javascript" th:inline="javascript">
+                                //<![CDATA[
+                                $(function () {
+                                    const format = 'YYYY-MM-DD HH:mm:ss Z';
+                                    $(/*[[${'#'+#ids.prev('exp_startTime')}]]*/ "#exp_startTime_2").text(moment(
+                                            /*[[${{experiment.startTime}}]]*/ '2016-03-11 05:00:00 +01:00',
+                                            format
+                                    ).tz(moment.tz.guess()).format(format));
+                                });//]]>
+                            </script>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

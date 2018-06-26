@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.springframework.org/schema/webflow"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <!--
+    Für flow-Definitionen in Ordnern ist der Pfad ab dem Basis-Pfad bis zum enthaltenden Ordner die id.
+    Aus /templates/blubb/blubb/blah-flow.xml wird also z.B. blubb/blubb
+     -->
+
+    <secured attributes="IS_AUTHENTICATED_FULLY,ROLE_USER"/>
+
+    <persistence-context/>
+
+    <on-start>
+        <evaluate expression="editExperiment.provideEntity(requestParameters.id, requestParameters.copy)"
+                  result="flowScope.dbExperiment"/>
+        <evaluate
+                expression="new de.uni_muenster.cs.comsys.tbmgmt.web.model.experiment.FilteredExperiment(dbExperiment)"
+                result="flowScope.experiment"/>
+    </on-start>
+
+    <view-state id="edit" model="experiment" view="editExperiment/edit">
+        <transition on="apply"/>
+        <transition on="discard" bind="false" validate="false"/>
+        <transition on="adjust" validate="false">
+            <evaluate expression="editExperiment.applyChanges(dbExperiment, requestParameters)"/>
+        </transition>
+        <transition on="uploadScript" bind="false">
+            <evaluate
+                    expression="editExperiment.setCreatorToCurrentUser(desCriptReader.read(requestParameters.desCriptFile))"
+                    result="flowScope.dbExperiment"/>
+            <evaluate
+                    expression="new de.uni_muenster.cs.comsys.tbmgmt.web.model.experiment.FilteredExperiment(dbExperiment)"
+                    result="flowScope.experiment"/>
+        </transition>
+        <transition on="uploadFile" bind="false">
+            <evaluate expression="editExperiment.addFile(dbExperiment, requestParameters.file)"/>
+        </transition>
+        <transition on="export">
+            <evaluate expression="desCriptRenderAction">
+                <attribute name="flowVariable" value="dbExperiment"/>
+            </evaluate>
+        </transition>
+        <transition on="store" to="store" history="invalidate"/>
+        <transition on="cancel" to="cancel" bind="false" validate="false" history="discard"/>
+    </view-state>
+
+    <end-state id="store" commit="true">
+        <on-entry>
+            <evaluate expression="experimentDao.mergeWithTransaction(dbExperiment)" result="flowScope.dbExperiment"/>
+        </on-entry>
+        <output name="experiment" value="dbExperiment"/>
+    </end-state>
+    <end-state id="cancel" commit="false"/>
+
+</flow>

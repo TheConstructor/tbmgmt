@@ -1,0 +1,38 @@
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         comparisonMethod="maven"
+         xmlns="http://www.mojohaus.org/versions-maven-plugin/rule/2.0.0"
+         xsi:schemaLocation="http://www.mojohaus.org/versions-maven-plugin/rule/2.0.0 http://www.mojohaus.org/versions-maven-plugin/xsd/rule-2.0.0.xsd">
+    <ignoreVersions>
+        <ignoreVersion type="regex">.*(alpha|ALPHA|Alpha).*</ignoreVersion>
+        <ignoreVersion type="regex">.*(beta|BETA|Beta).*</ignoreVersion>
+        <ignoreVersion type="regex">.*(rc|RC)[\d].*</ignoreVersion>
+        <ignoreVersion type="regex">.*-(A|a|B|b|M|m|EA|ea)[\d]+</ignoreVersion>
+    </ignoreVersions>
+    <rules>
+        <rule groupId="org.webjars" artifactId="jquery" comparisonMethod="maven">
+            <ignoreVersions>
+                <ignoreVersion type="regex">[^1].*</ignoreVersion>
+                <ignoreVersion type="regex">1[^.].*</ignoreVersion>
+            </ignoreVersions>
+        </rule>
+        <!-- we want the Java 8 versions -->
+        <rule groupId="org.postgresql" artifactId="postgresql" comparisonMethod="maven">
+            <ignoreVersions>
+                <ignoreVersion type="regex">.*\.jre6</ignoreVersion>
+                <ignoreVersion type="regex">.*\.jre7</ignoreVersion>
+                <ignoreVersion type="regex">.*-jdbc41</ignoreVersion>
+                <ignoreVersion type="regex">.*-jdbc4</ignoreVersion>
+            </ignoreVersions>
+        </rule>
+        <rule groupId="org.webjars.bower" artifactId="org.webjars.bower" comparisonMethod="maven">
+            <ignoreVersions>
+                <!--
+                this version will change time-values each time you leave the input and today will take you to 00:00
+                instead of the current time. Patch to first issue is in development branch since 6 month or more, so
+                hopefully next release will fix this, as for the other thing... we have to see.
+                 -->
+                <ignoreVersion type="exact">4.17.37</ignoreVersion>
+            </ignoreVersions>
+        </rule>
+    </rules>
+</ruleset>

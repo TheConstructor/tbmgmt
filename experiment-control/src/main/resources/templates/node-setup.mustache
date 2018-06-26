@@ -1,0 +1,15 @@
+serial 0 115200
+console 0
+default linux
+say Welcome to the testbed!
+NOESCAPE 1
+PROMPT 0
+TOTALTIMEOUT 30
+
+# imageFolder: {{node.imageFolder}}
+# kernelName: {{node.kernelName}}
+
+label linux
+KERNEL rootfs/vmlinuz
+APPEND initrd=rootfs/initrd.img nfsroot=10.5.202.8:/srv/rootfs,timeo=300,hard softlockup_panic=20  root=/dev/nfs panic=60 ro ipv6.disable=1 console=ttyS0,115200n8 ip=:10.5.202.8::::eth0:dhcp live-netdev=eth0 ethdevice-timeout=10 home=10.5.202.8:/srv/home/{{home}} console=ttyS0
+ONERROR recover

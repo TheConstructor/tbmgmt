@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.springframework.org/schema/webflow"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <!--
+    Für flow-Definitionen in Ordnern ist der Pfad ab dem Basis-Pfad bis zum enthaltenden Ordner die id.
+    Aus /templates/blubb/blubb/blah-flow.xml wird also z.B. blubb/blubb
+     -->
+
+    <secured attributes="ROLE_ADMIN"/>
+
+    <persistence-context/>
+
+    <on-start>
+        <evaluate expression="admin_editInterfaceType.provideEntity(requestParameters.id)"
+                  result="flowScope.dbInterfaceType"/>
+        <evaluate
+                expression="new de.uni_muenster.cs.comsys.tbmgmt.web.model.FilteredUniquelyNamedEntity(dbInterfaceType)"
+                result="flowScope.interfaceType"/>
+    </on-start>
+
+    <view-state id="edit" model="interfaceType" view="admin/editInterfaceType/edit">
+        <transition on="apply"/>
+        <transition on="discard" bind="false" validate="false"/>
+        <transition on="store" to="store" history="invalidate"/>
+        <transition on="cancel" to="cancel" bind="false" validate="false" history="discard"/>
+    </view-state>
+
+    <end-state id="store" commit="true">
+        <on-entry>
+            <evaluate expression="interfaceTypeDao.mergeWithTransaction(dbInterfaceType)"
+                      result="flowScope.dbInterfaceType"/>
+        </on-entry>
+        <output name="interfaceType" value="dbInterfaceType"/>
+    </end-state>
+    <end-state id="cancel" commit="false"/>
+
+</flow>

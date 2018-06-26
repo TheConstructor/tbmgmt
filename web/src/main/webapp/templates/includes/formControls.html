@@ -1,0 +1,407 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Form Controlls</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.css"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap', 'css/bootstrap.min.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap-theme.css"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap', 'css/bootstrap-theme.min.css')}}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/css/bootstrap-select.min.css"
+          th:href="@{${@webJarUrlUtil.getUrl('bootstrap-select', 'css/bootstrap-select.min.css')}}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css"
+          th:href="@{${@webJarUrlUtil.getUrl('Eonasdan-bootstrap-datetimepicker', 'bootstrap-datetimepicker.min.css')}}"/>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.js"
+            th:src="@{${@webJarUrlUtil.getUrl('jquery', 'jquery.min.js')}}"></script>
+</head>
+<body>
+<form>
+    <fieldset class="container-fluid">
+        <legend class="col-xs-12">General Properties</legend>
+
+        <div class="form-group" th:fragment="textInput (name,id,label)">
+            <p class="row" th:classappend="${#fields.hasErrors('__${name}__')} ? 'has-error'">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_name" th:for="${id}" th:text="${label}">Name</label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9">
+                    <span class="input-group" th:remove="${#fields.hasErrors('__${name}__')}? none : tag">
+                        <span class="input-group-addon" th:if="${#fields.hasErrors('__${name}__')}"><span
+                                class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                        <input type="text" class="form-control" id="exp_name" th:id="${id}" th:field="*{__${name}__}"
+                               th:title="${!#strings.isEmpty(title)}?${title}"
+                               th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'"/>
+                    </span>
+                </span>
+            </p>
+
+            <p class="row" th:if="${#fields.hasErrors('__${name}__')}">
+
+            <div class="col-xs-12 col-md-offset-4 col-md-8 col-lq-offset-3 col-lg-9">
+                <ul>
+                    <li th:each="err : ${#fields.errors('__${name}__')}" th:text="${err}">The entered value is invalid
+                    </li>
+                </ul>
+            </div>
+            </p>
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_name').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+        <div class="form-group" th:fragment="textarea (name,id,label)">
+            <p class="row" th:classappend="${#fields.hasErrors('__${name}__')} ? 'has-error'">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_description" th:for="${id}"
+                           th:text="${label}">Description</label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9">
+                    <span class="input-group" th:remove="${#fields.hasErrors('__${name}__')}? none : tag">
+                        <span class="input-group-addon" th:if="${#fields.hasErrors('__${name}__')}"><span
+                                class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                        <textarea class="form-control" id="exp_description" rows="5" th:id="${id}"
+                                  th:title="${!#strings.isEmpty(title)}?${title}"
+                                  th:field="*{__${name}__}"></textarea>
+                    </span>
+                </span>
+            </p>
+
+            <p class="row" th:if="${#fields.hasErrors('__${name}__')}">
+
+            <div class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                <ul>
+                    <li th:each="err : ${#fields.errors('__${name}__')}" th:text="${err}">The entered value is invalid
+                    </li>
+                </ul>
+            </div>
+            </p>
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_description').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+        <th:block th:fragment="datetimeInput (name,id,label)">
+            <div class="form-group">
+                <p class="row" th:classappend="${#fields.hasErrors('__${name}__')} ? 'has-error'">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_startTime" th:for="${id}" th:text="${label}">Start
+                        Time</label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9">
+                    <span class="input-group date" id="exp_startTime_picker" th:id="${id}+'_picker'">
+                        <span class="input-group-addon" th:if="${#fields.hasErrors('__${name}__')}"><span
+                                class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                        <input type="text" class="form-control" id="exp_startTime" th:id="${id}"
+                               th:field="*{__${name}__}"
+                               th:title="${!#strings.isEmpty(title)}?${title}"
+                               th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'"/>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </span>
+                </span>
+                </p>
+
+                <p class="row" th:if="${#fields.hasErrors('__${name}__')}">
+
+                <div class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('__${name}__')}" th:text="${err}">The entered value is
+                            invalid
+                        </li>
+                    </ul>
+                </div>
+                </p>
+            </div>
+            <script type="text/javascript" th:inline="javascript">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}+'_picker']]*/ '#exp_startTime_picker').datetimepicker({
+                        format: 'YYYY-MM-DD HH:mm:ss Z',
+                        useCurrent: false, // so the picker does not change date on open
+                        showTodayButton: true,
+                        keepInvalid: true
+                    });
+                });
+                /* ]]> */
+            </script>
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_startTime').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </th:block>
+
+        <div class="form-group" th:fragment="checkboxInput (name,id,label)">
+            <p class="row" th:classappend="${#fields.hasErrors('__${name}__')} ? 'has-error'">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_restartNodes" th:for="${id}" th:text="${label}">Restart
+                        Nodes</label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9">
+                    <span class="input-group" th:remove="${#fields.hasErrors('__${name}__')}? none : tag">
+                        <span class="input-group-addon" th:if="${#fields.hasErrors('__${name}__')}"><span
+                                class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                        <input type="checkbox" class="form-control" id="exp_restartNodes" th:id="${id}" th:field="*{__${name}__}"
+                               th:title="${!#strings.isEmpty(title)}?${title}"
+                               th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'"/>
+                    </span>
+                </span>
+            </p>
+
+            <p class="row" th:if="${#fields.hasErrors('__${name}__')}">
+
+            <div class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                <ul>
+                    <li th:each="err : ${#fields.errors('__${name}__')}" th:text="${err}">The entered value is invalid
+                    </li>
+                </ul>
+            </div>
+            </p>
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_restartNodes').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+        <div class="form-group" layout:fragment="singleSelect (name,id,label)">
+            <p class="row" th:classappend="${#fields.hasErrors('__${name}__')} ? 'has-error'">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_nodeGroup_role" th:for="${id}" th:text="${label}">Name</label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9">
+                    <span class="input-group" th:remove="${#fields.hasErrors('__${name}__')}? none : tag">
+                        <span class="input-group-addon" th:if="${#fields.hasErrors('__${name}__')}"><span
+                                class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                        <select class="form-control selectpicker" id="exp_nodeGroup_role"
+                                th:id="${id}" th:field="*{__${name}__}"
+                                th:remove="all-but-first">
+                            <option value="" layout:fragment="options">No Option specified 1</option>
+                            <option value="">No Option specified 2</option>
+                            <option value="">No Option specified 3</option>
+                        </select>
+                    </span>
+                </span>
+            </p>
+            <p class="row" th:if="${#fields.hasErrors('__${name}__')}">
+
+            <div class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                <ul>
+                    <li th:each="err : ${#fields.errors('__${name}__')}" th:text="${err}">The entered value is invalid
+                    </li>
+                </ul>
+            </div>
+            </p>
+            <script type="text/javascript" th:inline="javascript">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_nodeGroup_role').selectpicker();
+                });
+                /* ]]> */
+            </script>
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_nodeGroup_role').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+
+        <div class="form-group" layout:fragment="multiSelect (name,id,label,title)">
+            <p class="row" th:classappend="${#fields.hasErrors('__${name}__')} ? 'has-error'">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_nodeGroup_nodes" th:for="${id}"
+                           th:text="${label}">Name</label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9">
+                    <span class="input-group" th:remove="${#fields.hasErrors('__${name}__')}? none : tag">
+                        <span class="input-group-addon" th:if="${#fields.hasErrors('__${name}__')}"><span
+                                class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                        <select class="form-control selectpicker" id="exp_nodeGroup_nodes"
+                                multiple="multiple"
+                                data-live-search="true" title="Select the nodes in this group"
+                                data-selected-text-format="count>5"
+                                data-actions-box="true"
+                                th:id="${id}" th:field="*{__${name}__}"
+                                th:title="${title}"
+                                th:remove="all-but-first">
+                            <option value="" layout:fragment="options">No Option specified 1</option>
+                            <option value="">No Option specified 2</option>
+                            <option value="">No Option specified 3</option>
+                        </select>
+                    </span>
+                </span>
+            </p>
+            <p class="row" th:if="${#fields.hasErrors('__${name}__')}">
+
+            <div class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                <ul>
+                    <li th:each="err : ${#fields.errors('__${name}__')}" th:text="${err}">The entered value is invalid
+                    </li>
+                </ul>
+            </div>
+            </p>
+            <script type="text/javascript" th:inline="javascript">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_nodeGroup_nodes').selectpicker();
+                });
+                /* ]]> */
+            </script>
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_nodeGroup_nodes').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+
+        <div class="form-group" layout:fragment="tagInput (name,id,label)">
+            <p class="row" th:classappend="${#fields.hasErrors('__${name}__')} ? 'has-error'">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="exp_tags" th:for="${id}"
+                           th:text="${label}">Name</label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9">
+                    <span class="input-group" th:remove="${#fields.hasErrors('__${name}__')}? none : tag">
+                        <span class="input-group-addon" th:if="${#fields.hasErrors('__${name}__')}"><span
+                                class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                        <select class="form-control" id="exp_tags"
+                                multiple="multiple"
+                                th:id="${id}" th:field="*{__${name}__}"
+                                th:remove="all-but-first">
+                            <option value="" layout:fragment="options">No Option specified 1</option>
+                            <option value="">No Option specified 2</option>
+                            <option value="">No Option specified 3</option>
+                        </select>
+                    </span>
+                </span>
+            </p>
+            <p class="row" th:if="${#fields.hasErrors('__${name}__')}">
+
+            <div class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                <ul>
+                    <li th:each="err : ${#fields.errors('__${name}__')}" th:text="${err}">The entered value is invalid
+                    </li>
+                </ul>
+            </div>
+            </p>
+            <script type="text/javascript" th:inline="javascript">
+                /* <![CDATA[ */
+                $(function () {
+                    var citynames = new Bloodhound({
+                        datumTokenizer: Bloodhound.tokenizers.whitespace,
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        remote: {
+                            url: /*[[@{/tags/json(q=QUERYSTRING)}]]*/ 'assets/citynames.json',
+                            wildcard: 'QUERYSTRING',
+                            transform: function (list) {
+                                return $.map(list, function (tag) {
+                                    return tag.name;
+                                });
+                            }
+                        }
+                    });
+                    citynames.initialize();
+
+                    $(/*[['#' + ${id}]]*/ '#exp_tags').tagsinput({
+                        typeaheadjs: {
+                            name: /*[[${id} + '_typeaheadjs']]*/ 'citynames',
+                            source: citynames.ttAdapter()
+                        },
+                        freeInput: true,
+                        cancelConfirmKeysOnEmpty: true,
+                        trimValue: true
+                    });
+                });
+                /* ]]> */
+            </script>
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_tags').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+        <div class="form-group" th:fragment="fileInput (name,id,label)">
+            <p class="row" th:classappend="${#fields.hasErrors('__${name}__')} ? 'has-error'">
+                <span class="col-xs-12 col-md-4 col-lg-3">
+                    <label class="control-label" for="some_file" th:for="${id}" th:text="${label}">Name</label>
+                </span>
+                <span class="col-xs-12 col-md-8 col-lg-9">
+                    <span class="input-group" th:remove="${#fields.hasErrors('__${name}__')}? none : tag">
+                        <span class="input-group-addon" th:if="${#fields.hasErrors('__${name}__')}"><span
+                                class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>
+                        <input type="file" class="form-control" id="some_file" th:id="${id}" th:field="*{__${name}__}"
+                               th:title="${!#strings.isEmpty(title)}?${title}"
+                               th:attr="data-toggle=${!#strings.isEmpty(title)}?tooltip,data-placement=${!#strings.isEmpty(title)}?'top auto'"/>
+                    </span>
+                </span>
+            </p>
+
+            <p class="row" th:if="${#fields.hasErrors('__${name}__')}">
+
+            <div class="col-xs-12 col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                <ul>
+                    <li th:each="err : ${#fields.errors('__${name}__')}" th:text="${err}">The entered value is invalid
+                    </li>
+                </ul>
+            </div>
+            </p>
+            <script type="text/javascript" th:inline="javascript" th:unless="${#strings.isEmpty(title)}">
+                /* <![CDATA[ */
+                $(function () {
+                    $(/*[['#' + ${id}]]*/ '#exp_name').tooltip();
+                });
+                /* ]]> */
+            </script>
+        </div>
+
+    </fieldset>
+</form>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"
+        th:src="@{${@webJarUrlUtil.getUrl('momentjs', 'min/moment.min.js')}}"></script>
+<script type="text/javascript" src="http://getbootstrap.com/dist/js/bootstrap.js"
+        th:src="@{${@webJarUrlUtil.getUrl('bootstrap', 'js/bootstrap.min.js')}}"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/js/bootstrap-select.min.js"
+        th:src="@{${@webJarUrlUtil.getUrl('bootstrap-select', 'js/bootstrap-select.min.js')}}"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.15.35/js/bootstrap-datetimepicker.min.js"
+        th:src="@{${@webJarUrlUtil.getUrl('Eonasdan-bootstrap-datetimepicker', 'bootstrap-datetimepicker.min.js')}}"></script>
+<script type="text/javascript">
+    /* <![CDATA[ */
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+    $('.selectpicker').selectpicker();
+    /* ]]> */
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+dn: uid=testbed-user,ou=students,dc=testbed,dc=home
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: testbed-user
+sn: Testbednutzer
+givenName: Testbednutzer
+cn: Testbednutzer
+displayName: Testbednutzer
+uidNumber: 2000
+gidNumber: 2000
+# The great "password" as salted SHA-256
+userPassword: {CRYPT}$6$8TotasdfO$VOXxjcf6Mv19phpn05EwhSh3Lrg.D9J7BtlOfZAgvrNHYKxsDVDO/Wy/dptDRkRkkc4DY.cd1J2qhmbYa4u0g.
+gecos: Testbednutzer
+loginShell: /bin/bash
+homeDirectory: /home/testbed-user
+shadowExpire: -1
+shadowFlag: 0
+shadowWarning: 7
+shadowMin: 0
+shadowMax: 99999
+shadowLastChange: 16742
+
+dn: uid=testbed-admin,ou=students,dc=testbed,dc=home
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: testbed-admin
+sn: Testbedadmin
+givenName: Testbedadmin
+cn: Testbedadmin
+displayName: Testbedadmin
+uidNumber: 2001
+gidNumber: 2001
+# The great "password" as salted SHA-256
+userPassword: {CRYPT}$6$8TotasdfO$VOXxjcf6Mv19phpn05EwhSh3Lrg.D9J7BtlOfZAgvrNHYKxsDVDO/Wy/dptDRkRkkc4DY.cd1J2qhmbYa4u0g.
+gecos: Testbedadmin
+loginShell: /bin/bash
+homeDirectory: /home/testbed-admin
+shadowExpire: -1
+shadowFlag: 0
+shadowWarning: 7
+shadowMin: 0
+shadowMax: 99999
+shadowLastChange: 16742
+
+dn: cn=testbed-user,ou=groups,dc=testbed,dc=home
+objectClass: top
+objectClass: posixGroup
+gidNumber: 2000
+memberUID: 2000
+
+dn: cn=testbed-user-group,ou=groups,dc=testbed,dc=home
+objectClass: top
+objectClass: groupOfNames
+member: uid=testbed-user,ou=students,dc=testbed,dc=home
+
+dn: cn=testbed-admin,ou=groups,dc=testbed,dc=home
+objectClass: top
+objectClass: posixGroup
+gidNumber: 2001
+memberUID: 2001
+
+dn: cn=testbed-admin-group,ou=groups,dc=testbed,dc=home
+objectClass: top
+objectClass: groupOfNames
+member: uid=testbed-admin,ou=students,dc=testbed,dc=home
+

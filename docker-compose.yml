@@ -1,0 +1,79 @@
+comsys_testbed:
+  build: ./docker
+  dockerfile: Dockerfile.base
+  #environment:
+    #- "https_proxy=http://10.5.201.137:3128"
+    #- "http_proxy=http://10.5.201.137:3128"
+tbmgmt:
+  build: .
+  dockerfile: Dockerfile
+  extends:
+    service: comsys_testbed
+web:
+  build: ./docker
+  dockerfile: Dockerfile.web
+  extends:
+    service: tbmgmt
+  environment:
+    - "TBMGMT_DB_JDBC_URL=jdbc:postgresql://postgresql:5432/tbmgmt"
+    - "TBMGMT_WEB_LDAP_PROVIDER_URL=ldap://ldap:389/"
+  volumes:
+    - "tbmgmt_storage:/tbmgmt"
+    - "tbmgmt_web_tmp:/tmp"
+  links:
+    - postgresql
+    - ldap_server:ldap
+  expose:
+    - "8080"
+  ports:
+    # - "host:container" # quotes to prevent special handling of seemingly base 60-numbers
+    - "80:8080"
+experiment-control:
+  build: ./docker
+  dockerfile: Dockerfile.experiment-control
+  extends:
+    service: tbmgmt
+  environment:
+    - "TBMGMT_DB_JDBC_URL=jdbc:postgresql://postgresql:5432/tbmgmt"
+    - "TBMGMT_EXPERIMENT_CONTROL_DHCP_HOSTS_FILE=/export/tftp/dhcp-hosts/tbmgmt"
+    - "TBMGMT_EXPERIMENT_CONTROL_HOSTS_FILE=/export/tftp/hosts/tbmgmt"
+    - "TBMGMT_EXPERIMENT_CONTROL_BOOT_CONFIGURATION_DIRECTORY=/export/tftp/pxelinux.cfg"
+    # systemctl reboot seems to always exit with status 1
+    - "TBMGMT_EXPERIMENT_CONTROL_REBOOT_COMMAND=systemctl reboot -i || echo systemctl reboot -i exited with $$?"
+#  volumes_from:
+#    - "rootfs"
+  volumes:
+    - "4abfa21ce4a1f93c82c60733d5cc7401207b39a3077171565e151f04de0b963a:/export" # from roofts
+    - "tbmgmt_storage:/tbmgmt"
+    - "tbmgmt_ec_tmp:/tmp"
+  links:
+    - postgresql
+postgresql:
+  image: postgres
+  environment:
+    - "POSTGRES_USER=tbmgmt"
+    - "POSTGRES_PASSWORD=S8TgInXjaj3Sw4rLHgSNbp6hFu32qVXcvKyM8n0nTw"
+  volumes:
+    - "postgres_data:/var/lib/postgresql/data"
+  expose:
+    - "5432"
+  # ports:
+    # - "5433:5432"
+ldap_server:
+  build: ./docker/ldap_server
+  expose:
+    - "389"
+  ports:
+    # - "host:container" # quotes to prevent special handling of seemingly base 60-numbers
+    - "389:389"
+dnsmasq:
+  build: ./docker/dnsmasq
+  dockerfile: Dockerfile
+  extends:
+    service: comsys_testbed
+  privileged: true
+  net: "host"
+#  volumes_from:
+#    - "rootfs"
+  volumes:
+    - "4abfa21ce4a1f93c82c60733d5cc7401207b39a3077171565e151f04de0b963a:/export" # from roofts

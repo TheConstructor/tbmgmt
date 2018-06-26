@@ -1,0 +1,22 @@
+tbmgmt:
+  files:
+    upload-temp-dir: "@project.build.directory@/tmp/upload"
+    evaluation-script-storage-dir: "@project.build.directory@/tmp/files"
+    experiment-file-storage-dir: "@project.build.directory@/tmp/files"
+  db:
+    jdbc-url: "jdbc:postgresql://localhost:5432/tb_db"
+    user: "tbmgmt"
+    password: "S8TgInXjaj3Sw4rLHgSNbp6hFu32qVXcvKyM8n0nTw"
+    hbm2ddlAuto: "create-drop"
+    show-sql: true
+  test:
+    postgresPath: "@project.build.directory@/tmp/embedded-postgres"
+
+logging:
+  level:
+    de.uni_muenster.cs.comsys.tbmgmt: DEBUG
+
+# Don't act as server...
+shell:
+  ssh.enabled: false
+  telnet.enabled: false

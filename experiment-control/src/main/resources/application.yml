@@ -1,0 +1,29 @@
+tbmgmt:
+  files:
+    upload-temp-dir: "/tmp/upload" # Can be a dummy, but must be present
+    evaluation-script-storage-dir: "/tbmgmt/files"
+    experiment-file-storage-dir: "/tbmgmt/files"
+  db:
+    jdbc-url: "jdbc:postgresql://postgresql:5432/tbmgmt"
+    user: "tbmgmt"
+    password: "S8TgInXjaj3Sw4rLHgSNbp6hFu32qVXcvKyM8n0nTw"
+    hbm2ddlAuto: "update"
+    show-sql: false
+  experiment:
+    control:
+      dhcp-hosts-file: "/tmp/tbmgmt/dhcp-hosts"
+      hosts-file: "/tmp/tbmgmt/hosts"
+      boot-configuration-directory: "/tmp/tbmgmt/tftpboot/pxelinux.cfg"
+      automation-username: "testbed-user"
+      reboot-command: "shutdown -r +0" # you probably need to add sudo as prefix
+      command-prefix: "" # this is where you can specify hup2kill
+      evaluation-script-runner: "/usr/bin/env python"
+
+logging:
+  level:
+    de.uni_muenster.cs: INFO
+
+# Don't act as server...
+shell:
+  ssh.enabled: false
+  telnet.enabled: false
