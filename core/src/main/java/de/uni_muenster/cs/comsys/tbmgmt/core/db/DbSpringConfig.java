@@ -6,7 +6,7 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.des_cript.impl.DesCriptDatabaseHelp
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl;
 import org.hibernate.cfg.AvailableSettings;
-import org.hibernate.dialect.PostgreSQL94Dialect;
+import org.hibernate.dialect.PostgreSQL95Dialect;
 import org.postgresql.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -52,7 +52,7 @@ public class DbSpringConfig {
         // Hibernate as persistence backend
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         final HashMap<String, String> jpaProperties = new HashMap<>();
-        jpaProperties.put(AvailableSettings.DIALECT, PostgreSQL94Dialect.class.getName());
+        jpaProperties.put(AvailableSettings.DIALECT, PostgreSQL95Dialect.class.getName());
         jpaProperties.put(AvailableSettings.HBM2DDL_AUTO, dbConfiguration.getHbm2ddlAuto());
         jpaProperties.put(AvailableSettings.USE_NEW_ID_GENERATOR_MAPPINGS, "true");
         jpaProperties.put(AvailableSettings.SHOW_SQL, dbConfiguration.getShowSql());
@@ -63,6 +63,8 @@ public class DbSpringConfig {
         jpaProperties
                 .put(AvailableSettings.PHYSICAL_NAMING_STRATEGY, PhysicalNamingStrategyStandardImpl.class.getName());
         jpaProperties.put(AvailableSettings.ENABLE_LAZY_LOAD_NO_TRANS, "true");
+        // next see https://stackoverflow.com/a/48601315/1266906
+        jpaProperties.put(AvailableSettings.NON_CONTEXTUAL_LOB_CREATION, "true");
         // emmits warnings...
         // jpaProperties.put(AvailableSettings.RELEASE_CONNECTIONS, "AFTER_TRANSACTION");
         entityManagerFactoryBean.setJpaPropertyMap(jpaProperties);

@@ -16,21 +16,7 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.des_cript.NodeNameResolver;
 import de.uni_muenster.cs.comsys.tbmgmt.core.model.ExecutionMode;
 import de.uni_muenster.cs.comsys.tbmgmt.core.model.NodeRole;
 import de.uni_muenster.cs.comsys.tbmgmt.core.model.VariableValueType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.ActionBlockType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.ActionType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.ActionsType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.ArrayValues;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.ExperimentType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.FileType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.FilesType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.GeneralType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.GroupType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.GroupsType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.MembersType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.NodeType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.VariableBlockType;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.VariableRange;
-import de.uni_muenster.cs.comsys.tbmgmt.core.schema.VariableType;
+import de.uni_muenster.cs.comsys.tbmgmt.core.schema.*;
 import de.uni_muenster.cs.comsys.tbmgmt.core.utils.formatter.InstantFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +91,7 @@ public class DesCriptReaderImpl implements DesCriptReader {
             return null;
         }
         try {
-            return MimeType.valueOf(contentType).getCharSet();
+            return MimeType.valueOf(contentType).getCharset();
         } catch (final InvalidMimeTypeException e) {
             LOG.log(Level.FINE, "Could not parse " + contentType + " to MimeType", e);
             return null;

@@ -3,7 +3,7 @@ package de.uni_muenster.cs.comsys.tbmgmt.core.db.userTypes;
 import de.uni_muenster.cs.comsys.tbmgmt.core.model.MacAddress;
 import org.hibernate.HibernateException;
 import org.hibernate.TypeMismatchException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
 import org.postgresql.util.PGobject;
 
@@ -43,7 +43,7 @@ public class MacAddressUserType implements UserType {
     }
 
     @Override
-    public Object nullSafeGet(final ResultSet rs, final String[] names, final SessionImplementor session,
+    public Object nullSafeGet(final ResultSet rs, final String[] names, final SharedSessionContractImplementor session,
             final Object owner)
             throws HibernateException, SQLException {
         String value = rs.getString(names[0]);
@@ -62,7 +62,7 @@ public class MacAddressUserType implements UserType {
 
     @Override
     public void nullSafeSet(final PreparedStatement st, final Object value, final int index,
-            final SessionImplementor session)
+            final SharedSessionContractImplementor session)
             throws HibernateException, SQLException {
         if (value == null) {
             st.setNull(index, Types.OTHER, PG_TYPE_STRING);

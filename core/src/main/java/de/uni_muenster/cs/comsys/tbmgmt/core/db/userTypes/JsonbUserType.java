@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.HibernateException;
 import org.hibernate.TypeMismatchException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.DynamicParameterizedType;
 import org.hibernate.usertype.UserType;
 import org.postgresql.util.PGobject;
@@ -47,10 +47,10 @@ public class JsonbUserType implements UserType, DynamicParameterizedType {
     public int hashCode(final Object x) throws HibernateException {
         return Objects.hashCode(objectMapper.valueToTree(x));
     }
-
+    
     @Override
-    public Object nullSafeGet(final ResultSet rs, final String[] names, final SessionImplementor session,
-            final Object owner)
+    public Object nullSafeGet(final ResultSet rs, final String[] names,
+            final SharedSessionContractImplementor session, final Object owner)
             throws HibernateException, SQLException {
         final String value = rs.getString(names[0]);
         if (value == null) {
@@ -68,7 +68,7 @@ public class JsonbUserType implements UserType, DynamicParameterizedType {
 
     @Override
     public void nullSafeSet(final PreparedStatement st, final Object value, final int index,
-            final SessionImplementor session)
+            final SharedSessionContractImplementor session)
             throws HibernateException, SQLException {
         if (value == null) {
             st.setNull(index, Types.OTHER, PG_TYPE_STRING);

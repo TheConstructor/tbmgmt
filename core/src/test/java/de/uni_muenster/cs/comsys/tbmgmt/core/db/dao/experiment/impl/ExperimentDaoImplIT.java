@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by matthias on 18.02.16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {DbIntegrationTestSpringConfig.class})
+@SpringBootTest(classes = {DbIntegrationTestSpringConfig.class})
 public class ExperimentDaoImplIT {
 
     @Autowired

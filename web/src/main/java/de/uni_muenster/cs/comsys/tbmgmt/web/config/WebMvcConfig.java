@@ -8,8 +8,9 @@ import de.uni_muenster.cs.comsys.tbmgmt.web.support.WebJarUrlUtil;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.MultipartProperties;
+import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.CssLinkResourceTransformer;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
@@ -41,9 +42,10 @@ import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.dialect.SpringStandardDialect;
+import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.AjaxThymeleafViewResolver;
 import org.thymeleaf.spring4.view.FlowAjaxThymeleafView;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.servlet.MultipartConfigElement;
 import java.nio.charset.StandardCharsets;
@@ -60,13 +62,16 @@ import java.util.concurrent.TimeUnit;
 @ComponentScan(basePackageClasses = GreetingController.class)
 @Import({WebFlowConfig.class, CoreSpringConfig.class})
 @EnableConfigurationProperties
-public class WebMvcConfig extends WebMvcConfigurerAdapter {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private Jaxb2Marshaller jaxb2Marshaller;
 
     @Autowired
     private FormatterRegistrar coreFormatterRegistrar;
+    
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Override
     public void addFormatters(final FormatterRegistry registry) {
@@ -143,13 +148,14 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public ServletContextTemplateResolver defaultTemplateResolver() {
-        final ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
+    public SpringResourceTemplateResolver defaultTemplateResolver() {
+        final SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         // Template-File-Encoding
+        templateResolver.setApplicationContext(applicationContext);
         templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        templateResolver.setPrefix("/templates/");
+        templateResolver.setPrefix("/WEB-INF/templates/");
         templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode("HTML5");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
         return templateResolver;
     }
 
