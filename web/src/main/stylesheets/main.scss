@@ -1,9 +1,9 @@
 //noinspection CssUnknownTarget
-@import "bourbon";
+//@import "bourbon/bourbon";
 
 html {
   color: black;
-  @include background-image(linear-gradient(white, #cccccc));
+  background-image: linear-gradient(white, #cccccc);
   background: {
     repeat: no-repeat;
     attachment: fixed;

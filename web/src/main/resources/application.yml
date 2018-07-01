@@ -1,6 +1,6 @@
 spring:
   main:
-    banner-mode: OFF
+    banner-mode: "OFF"
 
 tbmgmt:
   files:

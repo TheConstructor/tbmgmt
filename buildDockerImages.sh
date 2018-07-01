@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 docker-compose -p tbmgmt build --pull --force-rm comsys_testbed
 docker-compose -p tbmgmt build --force-rm ldap_server
 #Image - nothing to build

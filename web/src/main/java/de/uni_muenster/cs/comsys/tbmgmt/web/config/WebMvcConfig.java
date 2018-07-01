@@ -37,14 +37,12 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.CssLinkResourceTransformer;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.thymeleaf.dialect.IDialect;
-import org.thymeleaf.extras.conditionalcomments.dialect.ConditionalCommentsDialect;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.thymeleaf.spring4.dialect.SpringStandardDialect;
-import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.spring4.view.AjaxThymeleafViewResolver;
-import org.thymeleaf.spring4.view.FlowAjaxThymeleafView;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring5.webflow.view.AjaxThymeleafViewResolver;
+import org.thymeleaf.spring5.webflow.view.FlowAjaxThymeleafView;
 import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.servlet.MultipartConfigElement;
@@ -136,9 +134,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         final Set<IDialect> dialects = new LinkedHashSet<>();
         dialects.add(new LayoutDialect());
-        dialects.add(new SpringStandardDialect());
+        //dialects.add(new SpringStandardDialect());
         dialects.add(new SpringSecurityDialect());
-        dialects.add(new ConditionalCommentsDialect());
         dialects.add(new Java8TimeDialect());
 
         final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
@@ -153,7 +150,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // Template-File-Encoding
         templateResolver.setApplicationContext(applicationContext);
         templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        templateResolver.setPrefix("/WEB-INF/templates/");
+        templateResolver.setPrefix("/templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
         return templateResolver;

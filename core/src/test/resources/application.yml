@@ -11,6 +11,7 @@ tbmgmt:
     show-sql: true
   test:
     postgresPath: "@project.build.directory@/tmp/embedded-postgres"
+    postgresArtifactsPath: "@project.basedir@/tmp/embedded-postgres"
 
 logging:
   level:

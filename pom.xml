@@ -24,7 +24,6 @@
         <springsecurity-version>5.3.3.RELEASE</springsecurity-version>
         <thymeleaf-version>3.0.9.RELEASE</thymeleaf-version>
         <thymeleaf-extras-springsecurity4-version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4-version>
-        <thymeleaf-extras-conditionalcomments-version>2.1.2.RELEASE</thymeleaf-extras-conditionalcomments-version>
         <thymeleaf-extras-java8time-version>3.0.1.RELEASE</thymeleaf-extras-java8time-version>
         <compiler.version>1.8</compiler.version>
         <aspectj.version>1.9.5</aspectj.version>
@@ -112,6 +111,7 @@
                         <id>post-integration-test</id>
                         <phase>post-integration-test</phase>
                         <goals>
+                            <goal>report-integration</goal>
                             <goal>report-aggregate</goal>
                         </goals>
                     </execution>
@@ -195,7 +195,7 @@
                 <plugin>
                     <groupId>nl.geodienstencentrum.maven</groupId>
                     <artifactId>sass-maven-plugin</artifactId>
-                    <version>2.14</version>
+                    <version>3.5.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.owasp</groupId>
@@ -419,18 +419,13 @@
             </dependency>
             <dependency>
                 <groupId>org.thymeleaf</groupId>
-                <artifactId>thymeleaf-spring4</artifactId>
+                <artifactId>thymeleaf-spring5</artifactId>
                 <version>${thymeleaf-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.thymeleaf.extras</groupId>
                 <artifactId>thymeleaf-extras-springsecurity4</artifactId>
                 <version>${thymeleaf-extras-springsecurity4-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.thymeleaf.extras</groupId>
-                <artifactId>thymeleaf-extras-conditionalcomments</artifactId>
-                <version>${thymeleaf-extras-conditionalcomments-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.thymeleaf.extras</groupId>
@@ -522,7 +517,7 @@
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>webjars-locator</artifactId>
-                <version>0.34</version>
+                <version>0.30</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
@@ -537,7 +532,7 @@
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>bootstrap</artifactId>
-                <version>4.1.1</version>
+                <version>3.3.6</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
@@ -547,27 +542,27 @@
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>html5shiv</artifactId>
-                <version>3.7.3-1</version>
+                <version>3.7.3</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>respond</artifactId>
-                <version>1.4.2-1</version>
+                <version>1.4.2</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>moment</artifactId>
-                <version>2.22.2</version>
+                <version>2.11.2</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>moment-timezone</artifactId>
-                <version>0.5.14</version>
+                <version>0.5.0</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>eonasdan-bootstrap-datetimepicker</artifactId>
-                <version>4.17.47</version>
+                <version>4.15.35</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>

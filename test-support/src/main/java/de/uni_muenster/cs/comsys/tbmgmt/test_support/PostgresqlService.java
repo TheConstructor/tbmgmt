@@ -26,6 +26,8 @@ public class PostgresqlService implements InitializingBean, DisposableBean {
     
     @Value("${tbmgmt.test.postgresPath}")
     private String          postgresPath;
+    @Value("${tbmgmt.test.postgresArtifactsPath}")
+    private String          postgresArtifactsPath;
     private PostgresProcess process;
     private PostgresConfig  config;
 
@@ -39,7 +41,7 @@ public class PostgresqlService implements InitializingBean, DisposableBean {
                                 .tempDir(new FixedPath(postgresPath + "/tmp"))
                                 .download(new PostgresDownloadConfigBuilder()
                                         .defaultsForCommand(Command.Postgres)
-                                        .artifactStorePath(new FixedPath(postgresPath + "/artifacts"))
+                                        .artifactStorePath(new FixedPath(postgresArtifactsPath))
                                         .build()))
                         .build());
         config =
