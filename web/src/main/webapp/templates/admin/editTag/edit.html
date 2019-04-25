@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/standard">
+      layout:decorate="~{layouts/standard}">
 
 <!--@thymesVar id="tag" type="de.uni_muenster.cs.comsys.tbmgmt.web.model.FilteredUniquelyNamedEntity"-->
 <!--@thymesVar id="flowExecutionUrl" type="String"-->
@@ -30,7 +30,7 @@
                 <th:block th:if="${#fields.hasGlobalErrors()}" th:each="err : ${#fields.globalErrors()}">
                     <p th:text="${err}">Your input had errors</p>
                 </th:block>
-                <th:block th:each="err : ${#fields.detailedErrors()}">
+                <th:block th:each="err : ${#fields.allDetailedErrors()}">
                     <p th:if="${!err.global}">
                         <strong th:text="${err.getFieldName()}">Name</strong>: <span th:text="${err.getMessage()}">is wrong</span>
                     </p>

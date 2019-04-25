@@ -36,7 +36,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.CssLinkResourceTransformer;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
-import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -47,9 +46,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.servlet.MultipartConfigElement;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -131,16 +128,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
     public SpringTemplateEngine templateEngine() {
-
-        final Set<IDialect> dialects = new LinkedHashSet<>();
-        dialects.add(new LayoutDialect());
-        //dialects.add(new SpringStandardDialect());
-        dialects.add(new SpringSecurityDialect());
-        dialects.add(new Java8TimeDialect());
-
         final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        
         templateEngine.setTemplateResolver(defaultTemplateResolver());
-        templateEngine.setAdditionalDialects(dialects);
+        templateEngine.setEnableSpringELCompiler(true);
+    
+        templateEngine.addDialect(new LayoutDialect());
+        templateEngine.addDialect(new SpringSecurityDialect());
+        templateEngine.addDialect(new Java8TimeDialect());
+        
         return templateEngine;
     }
 
