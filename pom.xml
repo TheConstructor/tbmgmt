@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.4.RELEASE</version>
+        <version>2.1.4.RELEASE</version>
     </parent>
 
     <groupId>de.uni-muenster.cs.comsys.tbmgmt</groupId>
@@ -19,12 +19,12 @@
     <packaging>pom</packaging>
 
     <properties>
-        <webflow-version>2.4.7.RELEASE</webflow-version>
-        <hibernate-orm-version>5.2.17.Final</hibernate-orm-version>
+        <webflow-version>2.4.8.RELEASE</webflow-version>
+        <hibernate-orm-version>5.2.18.Final</hibernate-orm-version>
         <springsecurity-version>5.3.3.RELEASE</springsecurity-version>
-        <thymeleaf-version>3.0.9.RELEASE</thymeleaf-version>
-        <thymeleaf-extras-springsecurity4-version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4-version>
-        <thymeleaf-extras-java8time-version>3.0.1.RELEASE</thymeleaf-extras-java8time-version>
+        <thymeleaf-version>3.0.11.RELEASE</thymeleaf-version>
+        <thymeleaf-extras-springsecurity4-version>3.0.4.RELEASE</thymeleaf-extras-springsecurity4-version>
+        <thymeleaf-extras-java8time-version>3.0.4.RELEASE</thymeleaf-extras-java8time-version>
         <compiler.version>1.8</compiler.version>
         <aspectj.version>1.9.5</aspectj.version>
     </properties>
@@ -288,7 +288,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-jdk14</artifactId>
-                <version>1.7.25</version>
+                <version>1.7.26</version>
             </dependency>
 
             <!-- Hibernate -->
@@ -344,7 +344,7 @@
             <dependency>
                 <groupId>ru.yandex.qatools.embed</groupId>
                 <artifactId>postgresql-embedded</artifactId>
-                <version>2.9</version>
+                <version>2.10</version>
                 <scope>test</scope>
             </dependency>
 
@@ -352,7 +352,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>6.0.11.Final</version>
+                <version>6.0.16.Final</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.jboss.logging</groupId>
@@ -370,7 +370,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>25.1-jre</version>
+                <version>27.1-jre</version>
             </dependency>
 
             <dependency>
@@ -435,7 +435,7 @@
             <dependency>
                 <groupId>nz.net.ultraq.thymeleaf</groupId>
                 <artifactId>thymeleaf-layout-dialect</artifactId>
-                <version>2.3.0</version>
+                <version>2.4.1</version>
             </dependency>
 
             <!-- spring-webflow -->
@@ -503,21 +503,21 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.9.6</version>
+                <version>2.9.8</version>
             </dependency>
 
             <!-- sshj -->
             <dependency>
                 <groupId>com.hierynomus</groupId>
                 <artifactId>sshj</artifactId>
-                <version>0.26.0</version>
+                <version>0.27.0</version>
             </dependency>
 
             <!-- webjars -->
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>webjars-locator</artifactId>
-                <version>0.34</version>
+                <version>0.36</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
@@ -532,7 +532,7 @@
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>bootstrap</artifactId>
-                <version>3.3.6</version>
+                <version>4.3.1</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
@@ -542,27 +542,27 @@
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>html5shiv</artifactId>
-                <version>3.7.3</version>
+                <version>3.7.3-1</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>respond</artifactId>
-                <version>1.4.2</version>
+                <version>1.4.2-1</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>moment</artifactId>
-                <version>2.11.2</version>
+                <version>2.24.0</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>moment-timezone</artifactId>
-                <version>0.5.0</version>
+                <version>0.5.17</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>eonasdan-bootstrap-datetimepicker</artifactId>
-                <version>4.15.35</version>
+                <version>4.17.47</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
