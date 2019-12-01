@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <webflow-version>2.4.2.RELEASE</webflow-version>
+        <webflow-version>2.4.8.RELEASE</webflow-version>
         <hibernate-orm-version>5.1.0.Final</hibernate-orm-version>
         <springsecurity-version>4.0.3.RELEASE</springsecurity-version>
         <thymeleaf-version>2.1.4.RELEASE</thymeleaf-version>
