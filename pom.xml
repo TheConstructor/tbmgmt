@@ -18,7 +18,7 @@
     <properties>
         <webflow-version>2.4.2.RELEASE</webflow-version>
         <hibernate-orm-version>5.1.0.Final</hibernate-orm-version>
-        <springsecurity-version>4.0.3.RELEASE</springsecurity-version>
+        <springsecurity-version>5.3.1.RELEASE</springsecurity-version>
         <thymeleaf-version>2.1.4.RELEASE</thymeleaf-version>
         <thymeleaf-extras-springsecurity4-version>2.1.2.RELEASE</thymeleaf-extras-springsecurity4-version>
         <thymeleaf-extras-conditionalcomments-version>2.1.1.RELEASE</thymeleaf-extras-conditionalcomments-version>
