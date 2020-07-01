@@ -34,5 +34,11 @@
                 <ignoreVersion type="exact">4.17.37</ignoreVersion>
             </ignoreVersions>
         </rule>
+        <rule groupId="org.thymeleaf" artifactId="thymeleaf-spring5" comparisonMethod="maven">
+            <ignoreVersions>
+                <!-- We are affected by https://github.com/thymeleaf/thymeleaf-spring/issues/175 -->
+                <!--<ignoreVersion type="regex">3\.0\.[0-9]\.*</ignoreVersion>-->
+            </ignoreVersions>
+        </rule>
     </rules>
 </ruleset>

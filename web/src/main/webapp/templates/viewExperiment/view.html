@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/standard">
+      layout:decorate="~{layouts/standard}">
 <!--@thymesVar id="experiment" type="de.uni_muenster.cs.comsys.tbmgmt.web.model.experiment.FilteredExperimentWithLog"-->
 <!--@thymesVar id="flowExecutionUrl" type="String"-->
 <!--/*@thymesVar id="param" type="org.thymeleaf.context.WebRequestParamsVariablesMap"*/-->
@@ -30,7 +30,7 @@
                 <th:block th:if="${#fields.hasGlobalErrors()}" th:each="err : ${#fields.globalErrors()}">
                     <p th:text="${err}">Your input had errors</p>
                 </th:block>
-                <th:block th:each="err : ${#fields.detailedErrors()}">
+                <th:block th:each="err : ${#fields.allDetailedErrors()}">
                     <p th:if="${!err.global}">
                         <strong th:text="${err.getFieldName()}">Name</strong>: <span th:text="${err.getMessage()}">is wrong</span>
                     </p>
@@ -50,35 +50,35 @@
                         <li role="presentation" class="active">
                             <a href="#general" aria-controls="general" role="tab"
                                data-toggle="tab"
-                               th:classappend="${@tbmgmtWebUtils.containsFieldNotPrefixed(#fields.detailedErrors(),'nodeGroups','actionBlocks','variables','files')}?'bg-danger'">
+                               th:classappend="${@tbmgmtWebUtils.containsFieldNotPrefixed(#fields.allDetailedErrors(),'nodeGroups','actionBlocks','variables','files')}?'bg-danger'">
                                 General Properties
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#nodeGroups" aria-controls="nodeGroups" role="tab"
                                data-toggle="tab"
-                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.detailedErrors(),'nodeGroups')}?'bg-danger'">
+                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.allDetailedErrors(),'nodeGroups')}?'bg-danger'">
                                 Node Groups
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#actions" aria-controls="actions" role="tab"
                                data-toggle="tab"
-                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.detailedErrors(),'actionBlocks')}?'bg-danger'">
+                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.allDetailedErrors(),'actionBlocks')}?'bg-danger'">
                                 Actions
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#variables" aria-controls="variables" role="tab"
                                data-toggle="tab"
-                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.detailedErrors(),'variables')}?'bg-danger'">
+                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.allDetailedErrors(),'variables')}?'bg-danger'">
                                 Variables
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#files" aria-controls="files" role="tab"
                                data-toggle="tab"
-                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.detailedErrors(),'files')}?'bg-danger'">
+                               th:classappend="${@tbmgmtWebUtils.containsFieldPrefix(#fields.allDetailedErrors(),'files')}?'bg-danger'">
                                 Files
                             </a>
                         </li>

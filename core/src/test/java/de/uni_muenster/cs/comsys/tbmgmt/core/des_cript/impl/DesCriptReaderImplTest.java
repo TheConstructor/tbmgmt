@@ -21,9 +21,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.xml.transform.ResourceSource;
 
 import javax.xml.transform.Source;
@@ -40,7 +40,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {DesCriptReaderImplTest.class, DesCriptSpringConfig.class})
-@TransactionConfiguration(defaultRollback = true)
+@Rollback
 public class DesCriptReaderImplTest {
 
     private static final Logger LOG = Logger.getLogger(DesCriptReaderImplTest.class.getName());

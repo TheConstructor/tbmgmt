@@ -64,21 +64,27 @@ ENV NFS_HOME_PATH=$NFS_MAIN_FOLDER/$HOME_FOLDER \
     NFS_ROOTUSER_PATH=$NFS_MAIN_FOLDER/$ROOT_USER_FOLDER \
     NFS_ROOT_PATH=NFS_MAIN_FOLDER/$ROOTFS_FOLDER
 
-RUN echo Europe/Berlin > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
-
 
 # gosu-snippet extracted from https://github.com/docker-library/postgres/blob/ed23320582f4ec5b0e5e35c99d98966dacbc6ed8/9.4/Dockerfile
-RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
 RUN apt-get -q update \
     && DEBIAN_FRONTEND=noninteractive apt-get -yqq install --no-install-recommends \
-        python-software-properties \
+        apt-utils \
+    && DEBIAN_FRONTEND=noninteractive apt-get -yqq install --no-install-recommends \
         software-properties-common \
+        ca-certificates \
+        tzdata \
+        gpg \
+        gpg-agent \
+        dirmngr \
+    && echo Europe/Berlin > /etc/timezone \
+    && rm /etc/localtime \
+    && dpkg-reconfigure --frontend noninteractive tzdata \
+    && gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
     && add-apt-repository ppa:webupd8team/java \
     && apt-get -q update \
     && echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
     && echo debconf shared/accepted-oracle-license-v1-1 seen true |  debconf-set-selections \
     && DEBIAN_FRONTEND=noninteractive apt-get -yqq install --no-install-recommends \
-        ca-certificates \
         man \
         maven \
         nano \
@@ -91,7 +97,6 @@ RUN apt-get -q update \
 	&& rm /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
 	&& apt-get purge -y --auto-remove \
-	    python-software-properties \
 	    software-properties-common \
 	&& apt-get autoclean \
 	&& apt-get clean

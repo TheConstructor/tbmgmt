@@ -15,16 +15,26 @@ RUN groupadd testbed-group
 
 RUN addgroup --gid 2000 testbed-user \
     && useradd -u 2000 -g 2000 -m -s /bin/bash testbed-user \
-    && mkdir /install \
-    && chown -R testbed-user /build /install
+    && chown -R testbed-user /build
 
 
 COPY build.sh /build/build.sh
 WORKDIR /build
 RUN chmod +x ./build.sh
-RUN ./build.sh \
-    && mv /build/*/target/*.jar /build/*/target/*.war /install \
-    && rm -rf ~/.m2/repository /build
+RUN ./build.sh
+
+FROM tbmgmt_comsys_testbed:latest
+
+ENV TBMGMT_VERSION=0.1.0
+
+RUN groupadd testbed-group
+
+RUN addgroup --gid 2000 testbed-user \
+    && useradd -u 2000 -g 2000 -m -s /bin/bash testbed-user \
+    && mkdir /install \
+    && chown -R testbed-user /install
+
+COPY --from=0 /build/*/target/*.jar /build/*/target/*.war /install/
 
 RUN mkdir -p /srv/scripts/
 #COPY scripts /srv/scripts/

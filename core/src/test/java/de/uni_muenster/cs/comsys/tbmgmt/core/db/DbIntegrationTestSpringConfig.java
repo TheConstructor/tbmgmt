@@ -55,6 +55,8 @@ public class DbIntegrationTestSpringConfig {
         jpaProperties.put(AvailableSettings.PHYSICAL_NAMING_STRATEGY,
                 PhysicalNamingStrategyStandardImpl.class.getName());
         // jpaProperties.put(AvailableSettings.ENABLE_LAZY_LOAD_NO_TRANS, "true");
+        // next see https://stackoverflow.com/a/48601315/1266906
+        jpaProperties.put(AvailableSettings.NON_CONTEXTUAL_LOB_CREATION, "true");
         entityManagerFactoryBean.setJpaPropertyMap(jpaProperties);
 
         // No need for persistence.xml

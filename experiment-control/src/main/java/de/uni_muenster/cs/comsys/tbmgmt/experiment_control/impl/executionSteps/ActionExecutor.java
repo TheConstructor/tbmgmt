@@ -378,7 +378,7 @@ public class ActionExecutor {
                 case DIRECTORY:
                     // That's what we want
                     break;
-                case SYMKLINK:
+                case SYMLINK:
                 case UNKNOWN:
                     log.log(Level.INFO, "There is an entry by the name of " + path + " and type " + type
                             + " hopefully it acts as directory");

@@ -13,7 +13,7 @@ import de.uni_muenster.cs.comsys.tbmgmt.web.controller.admin.EditTagFlowHandler;
 import de.uni_muenster.cs.comsys.tbmgmt.web.controller.admin.EditTestbedFlowHandler;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.InstantViewRenderer;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.WebJarUrlUtil;
-import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
+import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

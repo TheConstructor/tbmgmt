@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.config.AbstractFlowConfiguration;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
@@ -15,7 +14,7 @@ import org.springframework.webflow.mvc.builder.MvcViewFactoryCreator;
 import org.springframework.webflow.mvc.servlet.FlowHandlerAdapter;
 import org.springframework.webflow.mvc.servlet.FlowHandlerMapping;
 import org.springframework.webflow.security.SecurityFlowExecutionListener;
-import org.thymeleaf.spring4.view.AjaxThymeleafViewResolver;
+import org.thymeleaf.spring5.webflow.view.AjaxThymeleafViewResolver;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.Arrays;
@@ -60,7 +59,7 @@ public class WebFlowConfig extends AbstractFlowConfiguration {
     @Bean
     public MvcViewFactoryCreator mvcViewFactoryCreator(final AjaxThymeleafViewResolver thymeleafViewResolver) {
         final MvcViewFactoryCreator factoryCreator = new MvcViewFactoryCreator();
-        factoryCreator.setViewResolvers(Arrays.<ViewResolver>asList(thymeleafViewResolver));
+        factoryCreator.setViewResolvers(Arrays.asList(thymeleafViewResolver));
         factoryCreator.setUseSpringBeanBinding(true);
         return factoryCreator;
     }

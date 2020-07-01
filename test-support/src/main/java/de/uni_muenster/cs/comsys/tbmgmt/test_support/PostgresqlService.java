@@ -1,6 +1,7 @@
 package de.uni_muenster.cs.comsys.tbmgmt.test_support;
 
 import de.flapdoodle.embed.process.io.directories.FixedPath;
+import de.flapdoodle.embed.process.store.PostgresArtifactStoreBuilder;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,11 +10,10 @@ import ru.yandex.qatools.embed.postgresql.PostgresExecutable;
 import ru.yandex.qatools.embed.postgresql.PostgresProcess;
 import ru.yandex.qatools.embed.postgresql.PostgresStarter;
 import ru.yandex.qatools.embed.postgresql.config.AbstractPostgresConfig;
-import ru.yandex.qatools.embed.postgresql.config.DownloadConfigBuilder;
 import ru.yandex.qatools.embed.postgresql.config.PostgresConfig;
+import ru.yandex.qatools.embed.postgresql.config.PostgresDownloadConfigBuilder;
 import ru.yandex.qatools.embed.postgresql.config.RuntimeConfigBuilder;
 import ru.yandex.qatools.embed.postgresql.distribution.Version;
-import ru.yandex.qatools.embed.postgresql.ext.ArtifactStoreBuilder;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -23,23 +23,25 @@ import java.net.ServerSocket;
  * /postgresql/PostgresqlService.java
  */
 public class PostgresqlService implements InitializingBean, DisposableBean {
-
+    
     @Value("${tbmgmt.test.postgresPath}")
-    private String postgresPath;
+    private String          postgresPath;
+    @Value("${tbmgmt.test.postgresArtifactsPath}")
+    private String          postgresArtifactsPath;
     private PostgresProcess process;
-    private PostgresConfig config;
+    private PostgresConfig  config;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         final PostgresStarter<PostgresExecutable, PostgresProcess> runtime = PostgresStarter.getInstance(
                 new RuntimeConfigBuilder()
                         .defaults(Command.Postgres)
-                        .artifactStore(new ArtifactStoreBuilder()
+                        .artifactStore(new PostgresArtifactStoreBuilder()
                                 .defaults(Command.Postgres)
                                 .tempDir(new FixedPath(postgresPath + "/tmp"))
-                                .download(new DownloadConfigBuilder()
+                                .download(new PostgresDownloadConfigBuilder()
                                         .defaultsForCommand(Command.Postgres)
-                                        .artifactStorePath(new FixedPath(postgresPath + "/artifacts"))
+                                        .artifactStorePath(new FixedPath(postgresArtifactsPath))
                                         .build()))
                         .build());
         config =

@@ -1,7 +1,10 @@
 package de.uni_muenster.cs.comsys.tbmgmt.core.db.dao.node.impl;
 
 import de.uni_muenster.cs.comsys.tbmgmt.core.db.DbIntegrationTestSpringConfig;
+import de.uni_muenster.cs.comsys.tbmgmt.core.db.dao.node.InterfaceTypeDao;
 import de.uni_muenster.cs.comsys.tbmgmt.core.db.dao.node.NodeDao;
+import de.uni_muenster.cs.comsys.tbmgmt.core.db.dao.node.NodeTypeDao;
+import de.uni_muenster.cs.comsys.tbmgmt.core.db.dao.node.TestbedDao;
 import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.node.Node;
 import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.node.NodeInterface;
 import de.uni_muenster.cs.comsys.tbmgmt.core.model.MacAddress;
@@ -10,7 +13,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,19 +31,32 @@ import static org.hamcrest.CoreMatchers.allOf;
  * Created by matthias on 18.02.16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {DbIntegrationTestSpringConfig.class})
+@SpringBootTest(classes = {DbIntegrationTestSpringConfig.class})
 public class NodeDaoImplIT {
 
     @Autowired
     private NodeDao nodeDao;
+    
+    @Autowired
+    private TestbedDao testbedDao;
+    
+    @Autowired
+    private NodeTypeDao nodeTypeDao;
+    
+    @Autowired
+    private InterfaceTypeDao interfaceTypeDao;
 
     @Test
     @Transactional
+    @Rollback
     public void testPersistFind() throws Exception {
         final Node node = new Node();
+        node.setTestbed(testbedDao.getByName("Testbed"));
+        node.setType(nodeTypeDao.getByName("virtual"));
         final NodeInterface nodeInterface = new NodeInterface();
         nodeInterface.setNode(node);
         node.getInterfaces().add(nodeInterface);
+        nodeInterface.setType(interfaceTypeDao.getByName("virtual"));
         final Inet4Address ipv4Address = (Inet4Address) InetAddress.getByAddress(new byte[]{127, 0, 0, 1});
         nodeInterface.setIpv4Address(ipv4Address);
         final Inet6Address ipv6Address =

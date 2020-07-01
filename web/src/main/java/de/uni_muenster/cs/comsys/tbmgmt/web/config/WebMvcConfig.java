@@ -8,8 +8,9 @@ import de.uni_muenster.cs.comsys.tbmgmt.web.support.WebJarUrlUtil;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.MultipartProperties;
+import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -31,25 +33,21 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.CssLinkResourceTransformer;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
-import org.thymeleaf.dialect.IDialect;
-import org.thymeleaf.extras.conditionalcomments.dialect.ConditionalCommentsDialect;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.thymeleaf.spring4.dialect.SpringStandardDialect;
-import org.thymeleaf.spring4.view.AjaxThymeleafViewResolver;
-import org.thymeleaf.spring4.view.FlowAjaxThymeleafView;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring5.webflow.view.AjaxThymeleafViewResolver;
+import org.thymeleaf.spring5.webflow.view.FlowAjaxThymeleafView;
+import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.servlet.MultipartConfigElement;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -60,13 +58,16 @@ import java.util.concurrent.TimeUnit;
 @ComponentScan(basePackageClasses = GreetingController.class)
 @Import({WebFlowConfig.class, CoreSpringConfig.class})
 @EnableConfigurationProperties
-public class WebMvcConfig extends WebMvcConfigurerAdapter {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private Jaxb2Marshaller jaxb2Marshaller;
 
     @Autowired
     private FormatterRegistrar coreFormatterRegistrar;
+    
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Override
     public void addFormatters(final FormatterRegistry registry) {
@@ -128,28 +129,27 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public SpringTemplateEngine templateEngine() {
-
-        final Set<IDialect> dialects = new LinkedHashSet<>();
-        dialects.add(new LayoutDialect());
-        dialects.add(new SpringStandardDialect());
-        dialects.add(new SpringSecurityDialect());
-        dialects.add(new ConditionalCommentsDialect());
-        dialects.add(new Java8TimeDialect());
-
         final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        
         templateEngine.setTemplateResolver(defaultTemplateResolver());
-        templateEngine.setAdditionalDialects(dialects);
+        templateEngine.setEnableSpringELCompiler(true);
+    
+        templateEngine.addDialect(new LayoutDialect());
+        templateEngine.addDialect(new SpringSecurityDialect());
+        templateEngine.addDialect(new Java8TimeDialect());
+        
         return templateEngine;
     }
 
     @Bean
-    public ServletContextTemplateResolver defaultTemplateResolver() {
-        final ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
+    public SpringResourceTemplateResolver defaultTemplateResolver() {
+        final SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         // Template-File-Encoding
+        templateResolver.setApplicationContext(applicationContext);
         templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
         templateResolver.setPrefix("/templates/");
         templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode("HTML5");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
         return templateResolver;
     }
 
@@ -184,8 +184,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public MultipartProperties multipartProperties(final FileConfig fileConfig) {
         final MultipartProperties multipartProperties = new MultipartProperties();
         multipartProperties.setLocation(fileConfig.getUploadTempPath().toString());
-        multipartProperties.setMaxFileSize("10MB");
-        multipartProperties.setMaxRequestSize("20MB");
+        multipartProperties.setMaxFileSize(DataSize.ofMegabytes(10));
+        multipartProperties.setMaxRequestSize(DataSize.ofMegabytes(20));
         return multipartProperties;
     }
 

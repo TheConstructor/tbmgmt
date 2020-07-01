@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.BaseLdapPathContextSource;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -28,6 +30,7 @@ import org.springframework.security.ldap.userdetails.NestedLdapAuthoritiesPopula
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import java.security.SecureRandom;
 
@@ -85,6 +88,8 @@ public class WebMvcSecurityConfig extends WebSecurityConfigurerAdapter implement
         http.rememberMe().userDetailsService(userDao);
 
         http.addFilterAfter(new RememberMeToFullFilter(), ExceptionTranslationFilter.class);
+        
+        http.csrf().csrfTokenRepository(new HttpSessionCsrfTokenRepository());
     }
 
     @Bean
@@ -121,5 +126,11 @@ public class WebMvcSecurityConfig extends WebSecurityConfigurerAdapter implement
     @Bean
     public SecureRandom secureRandom() {
         return new SecureRandom();
+    }
+    
+    @Override
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }
