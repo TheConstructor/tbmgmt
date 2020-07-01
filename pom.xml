@@ -539,7 +539,7 @@
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>bootstrap-select</artifactId>
-                <version>1.10.0</version>
+                <version>1.13.11</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
