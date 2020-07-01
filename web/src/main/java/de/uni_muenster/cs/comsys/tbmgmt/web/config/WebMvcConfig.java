@@ -24,6 +24,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -183,8 +184,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public MultipartProperties multipartProperties(final FileConfig fileConfig) {
         final MultipartProperties multipartProperties = new MultipartProperties();
         multipartProperties.setLocation(fileConfig.getUploadTempPath().toString());
-        multipartProperties.setMaxFileSize("10MB");
-        multipartProperties.setMaxRequestSize("20MB");
+        multipartProperties.setMaxFileSize(DataSize.ofMegabytes(10));
+        multipartProperties.setMaxRequestSize(DataSize.ofMegabytes(20));
         return multipartProperties;
     }
 
