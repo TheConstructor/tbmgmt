@@ -24,7 +24,7 @@
         <thymeleaf-extras-conditionalcomments-version>2.1.1.RELEASE</thymeleaf-extras-conditionalcomments-version>
         <thymeleaf-extras-java8time-version>2.1.0.RELEASE</thymeleaf-extras-java8time-version>
         <compiler.version>1.8</compiler.version>
-        <aspectj.version>1.8.8</aspectj.version>
+        <aspectj.version>1.9.5</aspectj.version>
     </properties>
 
     <modules>
