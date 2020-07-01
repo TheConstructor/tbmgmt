@@ -564,7 +564,7 @@
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>eonasdan-bootstrap-datetimepicker</artifactId>
-                <version>4.15.35</version>
+                <version>4.17.47</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
