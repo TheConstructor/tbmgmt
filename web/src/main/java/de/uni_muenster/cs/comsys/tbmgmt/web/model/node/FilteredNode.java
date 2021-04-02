@@ -5,13 +5,13 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.db.dao.node.TestbedDao;
 import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.node.Node;
 import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.node.NodeType;
 import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.node.Testbed;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;

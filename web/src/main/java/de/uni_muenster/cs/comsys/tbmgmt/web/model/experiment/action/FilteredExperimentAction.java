@@ -13,14 +13,13 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.utils.VariablesUtil;
 import de.uni_muenster.cs.comsys.tbmgmt.core.utils.iterator.PermutationIterable;
 import de.uni_muenster.cs.comsys.tbmgmt.web.model.NameAndDescription;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.Validateable;
-import org.apache.commons.lang3.StringUtils;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.Duration;
@@ -32,6 +31,8 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  Created by matthias on 17.05.15.

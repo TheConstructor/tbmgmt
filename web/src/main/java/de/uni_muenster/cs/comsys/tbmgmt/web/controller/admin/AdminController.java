@@ -21,6 +21,7 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.node.Testbed_;
 import de.uni_muenster.cs.comsys.tbmgmt.web.model.Pagination;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.InstantViewRenderer;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.TbmgmtWebUtils;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -35,7 +36,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Min;
 import java.util.Collections;
 
 /**

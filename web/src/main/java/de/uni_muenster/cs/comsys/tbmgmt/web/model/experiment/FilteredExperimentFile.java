@@ -5,8 +5,9 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.experiment.Experiment;
 import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.experiment.ExperimentFile;
 import de.uni_muenster.cs.comsys.tbmgmt.core.utils.TbmgmtUtil;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.Validateable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.binding.message.MessageBuilder;
@@ -14,7 +15,6 @@ import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Pattern;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;

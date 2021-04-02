@@ -8,21 +8,22 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.model.VariableValueType;
 import de.uni_muenster.cs.comsys.tbmgmt.core.utils.EnumUtil;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.MessageFormatMessageResolver;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.Validateable;
-import org.apache.commons.lang3.StringUtils;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.binding.message.Severity;
 import org.springframework.binding.validation.ValidationContext;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by matthias on 25.02.16.
