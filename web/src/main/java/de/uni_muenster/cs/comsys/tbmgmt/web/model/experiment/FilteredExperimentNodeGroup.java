@@ -7,15 +7,15 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.des_cript.NodeNameResolver;
 import de.uni_muenster.cs.comsys.tbmgmt.core.model.NodeRole;
 import de.uni_muenster.cs.comsys.tbmgmt.web.model.ConvertingList;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.Validateable;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
