@@ -3,13 +3,13 @@ package de.uni_muenster.cs.comsys.tbmgmt.web.model;
 import de.uni_muenster.cs.comsys.tbmgmt.core.config.FileConfig;
 import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.EvaluationScript;
 import de.uni_muenster.cs.comsys.tbmgmt.core.utils.TbmgmtUtil;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
