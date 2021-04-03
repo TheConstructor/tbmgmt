@@ -13,13 +13,13 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.utils.VariablesUtil;
 import de.uni_muenster.cs.comsys.tbmgmt.core.utils.iterator.PermutationIterable;
 import de.uni_muenster.cs.comsys.tbmgmt.web.model.NameAndDescription;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.Validateable;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.Duration;
@@ -194,7 +194,7 @@ public class FilteredExperimentAction implements Serializable, Validateable {
         } else if (StringUtils.startsWith(evaluationScript, DesCriptUtil.EVALUATION_FILE_PREFIX)) {
             final String evaluationFileName = evaluationScript.substring(DesCriptUtil.EVALUATION_FILE_PREFIX.length());
             try {
-                experimentAction.setEvaluationFile(experiment.getFiles().get(Integer.valueOf(evaluationFileName)));
+                experimentAction.setEvaluationFile(experiment.getFiles().get(Integer.parseInt(evaluationFileName)));
             } catch (NumberFormatException | IndexOutOfBoundsException e) {
                 throw new IllegalArgumentException("Can not find experiment file by index", e);
             }
@@ -237,9 +237,7 @@ public class FilteredExperimentAction implements Serializable, Validateable {
             final String baseEvaluationParameter =
                     VariablesUtil.replaceVariables(evaluationParameter, variables.iterator().next());
             final String withAddresses = VariablesUtil.replaceVariables(baseEvaluationParameter, entry.getKey());
-            final String withReturnCode =
-                    VariablesUtil.replaceVariables(withAddresses, Collections.singletonMap("returnCode", "0"));
-            return withReturnCode;
+            return VariablesUtil.replaceVariables(withAddresses, Collections.singletonMap("returnCode", "0"));
         }
     }
 

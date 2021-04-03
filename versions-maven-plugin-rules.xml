@@ -1,7 +1,7 @@
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          comparisonMethod="maven"
-         xmlns="http://www.mojohaus.org/versions-maven-plugin/rule/2.0.0"
-         xsi:schemaLocation="http://www.mojohaus.org/versions-maven-plugin/rule/2.0.0 http://www.mojohaus.org/versions-maven-plugin/xsd/rule-2.0.0.xsd">
+         xmlns="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0"
+         xsi:schemaLocation="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0 http://www.mojohaus.org/versions-maven-plugin/xsd/rule-2.0.0.xsd">
     <ignoreVersions>
         <ignoreVersion type="regex">.*(alpha|ALPHA|Alpha).*</ignoreVersion>
         <ignoreVersion type="regex">.*(beta|BETA|Beta).*</ignoreVersion>
@@ -38,6 +38,14 @@
             <ignoreVersions>
                 <!-- We are affected by https://github.com/thymeleaf/thymeleaf-spring/issues/175 -->
                 <!--<ignoreVersion type="regex">3\.0\.[0-9]\.*</ignoreVersion>-->
+            </ignoreVersions>
+        </rule>
+        <rule groupId="org.hibernate.validator" artifactId="hibernate-validator" comparisonMethod="maven">
+            <ignoreVersions>
+                <!--
+                with 7.0 hibernate-validator is switching from javax.validation to jakarta.validation and it seems e.g. webflow is not ready yet
+                 -->
+                <ignoreVersion type="regex">7\..*</ignoreVersion>
             </ignoreVersions>
         </rule>
     </rules>

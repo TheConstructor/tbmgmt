@@ -1,8 +1,8 @@
 package de.uni_muenster.cs.comsys.tbmgmt.web.model;
 
 import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.UniquelyNamedEntity;
-import jakarta.validation.constraints.NotBlank;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**

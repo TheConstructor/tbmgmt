@@ -5,12 +5,12 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.db.entities.experiment.action.Exper
 import de.uni_muenster.cs.comsys.tbmgmt.core.model.ExecutionMode;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.PrefixedValidationContext;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.Validateable;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.validation.ValidationContext;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
