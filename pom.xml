@@ -23,7 +23,7 @@
         <thymeleaf-extras-springsecurity4-version>3.0.4.RELEASE</thymeleaf-extras-springsecurity4-version>
         <thymeleaf-extras-java8time-version>3.0.4.RELEASE</thymeleaf-extras-java8time-version>
         <compiler.version>1.8</compiler.version>
-        <aspectj.version>1.9.6</aspectj.version>
+        <aspectj.version>1.9.7</aspectj.version>
     </properties>
 
     <modules>
