@@ -539,7 +539,7 @@
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>webjars-locator-core</artifactId>
-                <version>0.46</version>
+                <version>0.47</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.bower</groupId>
