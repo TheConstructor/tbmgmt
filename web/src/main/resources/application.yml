@@ -2,6 +2,10 @@ spring:
   main:
     banner-mode: "OFF"
 
+server:
+  error:
+    path: "/error"
+
 tbmgmt:
   files:
     upload-temp-dir: "/tmp/upload"

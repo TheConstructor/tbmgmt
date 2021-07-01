@@ -3,6 +3,7 @@ package de.uni_muenster.cs.comsys.tbmgmt.web.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
@@ -28,15 +29,13 @@ public class ErrorControllerImpl implements ErrorController {
         this.errorAttributes = errorAttributes;
     }
 
-    @Override
-    public String getErrorPath() {
-        return "/error";
-    }
-
     // Error page
     @RequestMapping("/error")
     public String error(WebRequest request, Model model) {
-        model.addAllAttributes(errorAttributes.getErrorAttributes(request, true));
+        model.addAllAttributes(
+                errorAttributes.getErrorAttributes(request,
+                        ErrorAttributeOptions.of(
+                                ErrorAttributeOptions.Include.values())));
     
         Object errorCode = request.getAttribute("javax.servlet.error.status_code", RequestAttributes.SCOPE_REQUEST);
         model.addAttribute("errorCode", errorCode);
