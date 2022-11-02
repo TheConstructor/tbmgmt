@@ -19,7 +19,7 @@
         <webflow-version>2.4.8.RELEASE</webflow-version>
         <hibernate-orm-version>5.6.12.Final</hibernate-orm-version>
         <springsecurity-version>5.7.5</springsecurity-version>
-        <thymeleaf-version>3.0.12.RELEASE</thymeleaf-version>
+        <thymeleaf-version>3.0.13.RELEASE</thymeleaf-version>
         <thymeleaf-extras-springsecurity4-version>3.0.4.RELEASE</thymeleaf-extras-springsecurity4-version>
         <thymeleaf-extras-java8time-version>3.0.4.RELEASE</thymeleaf-extras-java8time-version>
         <compiler.version>1.8</compiler.version>
