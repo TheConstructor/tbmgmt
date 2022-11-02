@@ -5,7 +5,7 @@ import de.uni_muenster.cs.comsys.tbmgmt.core.config.FileConfig;
 import de.uni_muenster.cs.comsys.tbmgmt.web.controller.GreetingController;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.TbmgmtWebUtils;
 import de.uni_muenster.cs.comsys.tbmgmt.web.support.WebJarUrlUtil;
-import nz.net.ultraq.thymeleaf.LayoutDialect;
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
