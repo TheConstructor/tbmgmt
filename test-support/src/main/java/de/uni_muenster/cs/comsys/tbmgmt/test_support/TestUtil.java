@@ -98,7 +98,7 @@ public final class TestUtil {
 
     @SafeVarargs
     public static <T> Matcher<Collection<? extends T>> elementsAreMatching(final Matcher<? super T>... expected) {
-        return elementsAreMatching(Arrays.asList(expected));
+        return TestUtil.<T>elementsAreMatching(Arrays.asList(expected));
     }
 
     public static <T> Matcher<Collection<? extends T>> elementsAreMatching(
